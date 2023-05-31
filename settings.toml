@@ -1,0 +1,24 @@
+[default]
+DEBUG = false
+
+# load flask extensions (calling <module>.init_data function)
+EXTENSIONS = [
+    # structure's extensions
+    "app.extensions.mongoengine",
+    "extensions.openapi",
+    # flask rest apis
+    "app.rest_apis.starwars"
+]
+
+
+
+[development]
+DEBUG = true
+
+
+
+[testing]
+
+
+
+[production]
