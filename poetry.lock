@@ -153,22 +153,22 @@ files = [
 
 [[package]]
 name = "cachecontrol"
-version = "0.12.11"
+version = "0.13.0"
 description = "httplib2 caching for requests"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "CacheControl-0.12.11-py2.py3-none-any.whl", hash = "sha256:2c75d6a8938cb1933c75c50184549ad42728a27e9f6b92fd677c3151aa72555b"},
-    {file = "CacheControl-0.12.11.tar.gz", hash = "sha256:a5b9fcc986b184db101aa280b42ecdcdfc524892596f606858e0b7a8b4d9e144"},
+    {file = "CacheControl-0.13.0-py3-none-any.whl", hash = "sha256:4544a012a25cf0a73c53cd986f68b4f9c9f6b1df01d741c2923c3d56c66c7bda"},
+    {file = "CacheControl-0.13.0.tar.gz", hash = "sha256:fd3fd2cb0ca66b9a6c1d56cc9709e7e49c63dbd19b1b1bcbd8d3f94cedfe8ce5"},
 ]
 
 [package.dependencies]
-lockfile = {version = ">=0.9", optional = true, markers = "extra == \"filecache\""}
+filelock = {version = ">=3.8.0", optional = true, markers = "extra == \"filecache\""}
 msgpack = ">=0.5.2"
-requests = "*"
+requests = ">=2.16.0"
 
 [package.extras]
-filecache = ["lockfile (>=0.9)"]
+filecache = ["filelock (>=3.8.0)"]
 redis = ["redis (>=2.10.5)"]
 
 [[package]]
@@ -432,6 +432,27 @@ toml = "*"
 [package.extras]
 conda = ["pyyaml"]
 pipenv = ["pipenv"]
+
+[[package]]
+name = "dynaconf"
+version = "3.1.12"
+description = "The dynamic configurator for your Python Project"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "dynaconf-3.1.12-py2.py3-none-any.whl", hash = "sha256:a79d7b3ad4a35af9b576c49f11cd3b23a1b04b87b63a4e9f92cc82f2b0cafeeb"},
+    {file = "dynaconf-3.1.12.tar.gz", hash = "sha256:11a60bcd735f82b8a47b288f99e4ffbbd08c6c130a7be93c5d03e93fc260a5e1"},
+]
+
+[package.extras]
+all = ["configobj", "hvac", "redis", "ruamel.yaml"]
+configobj = ["configobj"]
+ini = ["configobj"]
+redis = ["redis"]
+test = ["codecov", "configobj", "django", "flake8", "flake8-debugger", "flake8-print", "flake8-todo", "flask (>=0.12)", "hvac", "pep8-naming", "pytest", "pytest-cov", "pytest-mock", "pytest-xdist", "python-dotenv", "radon", "redis", "toml"]
+toml = ["toml"]
+vault = ["hvac"]
+yaml = ["ruamel.yaml"]
 
 [[package]]
 name = "email-validator"
@@ -739,17 +760,6 @@ files = [
     {file = "lazy_object_proxy-1.9.0-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:09763491ce220c0299688940f8dc2c5d05fd1f45af1e42e636b2e8b2303e4382"},
     {file = "lazy_object_proxy-1.9.0-cp39-cp39-win32.whl", hash = "sha256:9090d8e53235aa280fc9239a86ae3ea8ac58eff66a705fa6aa2ec4968b95c821"},
     {file = "lazy_object_proxy-1.9.0-cp39-cp39-win_amd64.whl", hash = "sha256:db1c1722726f47e10e0b5fdbf15ac3b8adb58c091d12b3ab713965795036985f"},
-]
-
-[[package]]
-name = "lockfile"
-version = "0.12.2"
-description = "Platform-independent file locking module"
-optional = false
-python-versions = "*"
-files = [
-    {file = "lockfile-0.12.2-py2.py3-none-any.whl", hash = "sha256:6c3cb24f344923d30b2785d5ad75182c8ea7ac1b6171b08657258ec7429d50fa"},
-    {file = "lockfile-0.12.2.tar.gz", hash = "sha256:6aed02de03cba24efabcd600b30540140634fc06cfa603822d508d5361e9f799"},
 ]
 
 [[package]]
@@ -2049,4 +2059,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.3"
-content-hash = "a91c799ea25dd6db0dd928ae404c7468d35eceec41e18eb68b82c1aae393bd84"
+content-hash = "629ec9f9e1230f09da6a4f32aac71843ea0e8542e7289397feff9c0b79763df2"

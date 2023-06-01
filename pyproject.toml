@@ -8,6 +8,7 @@ authors = ["Samuel Sampaio <samukasmk@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.11.3"
 ### flask requirements
+dynaconf = "^3.1.12"
 pymongo = "^4.3.3"
 mongoengine = "^0.27.0"
 marshmallow = "^3.19.0"
