@@ -1,8 +1,14 @@
-def test_retrieve_movie(client):  # Arrange
+import pytest
+
+from tests.datatest.movies_json import sample_movies
+
+
+@pytest.mark.parametrize("movie_request_payload", sample_movies())
+def test_retrieve_movie(client, movie_request_payload):
     """Test get all products"""
-    response = client.get("/api/starwars/movie/1/")
+    response = client.get(f"/api/starwars/movie/{movie_request_payload['id']}/")
     assert response.status_code == 200
-    assert response.get_json() == {"id": 1, "name": "hello world"}
+    assert response.get_json() == {"id": movie_request_payload["id"], "name": "hello world"}
     # assert response.get_json() == {
     #     "id": 1,
     #     "title": "A New Hope",

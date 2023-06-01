@@ -1,8 +1,14 @@
-def test_retrieve_planet(client):  # Arrange
+import pytest
+
+from tests.datatest.planets_json import sample_planets
+
+
+@pytest.mark.parametrize("movie_request_payload", sample_planets())
+def test_retrieve_planet(client, movie_request_payload):
     """Test get all products"""
-    response = client.get("/api/starwars/planet/1/")
+    response = client.get(f"/api/starwars/planet/{movie_request_payload['id']}/")
     assert response.status_code == 200
-    assert response.get_json() == {"id": 1, "name": "hello world"}
+    assert response.get_json() == {"id": movie_request_payload["id"], "name": "hello world"}
     # assert response.get_json() == {
     #     "id": 1,
     #     "name": "Tatooine",
