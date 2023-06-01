@@ -28,15 +28,23 @@ install:
 install-dev:
 	@pip install -r requirements-dev.txt
 
-activate-git-hooks: deactivate-git-hooks
-	@echo "Installing hooks..."
-	@ln -s ../../scripts/git-hooks/hooks/pre-commit $(GIT_CONFIG_DIR)/hooks/pre-commit
+
+### actions to manage git hooks
+activate-git-hook-commit-msg:
+	@echo "Installing hooks: commit-msg ..."
+	@find .git/hooks/commit-msg -type l -delete 2> /dev/null || true
 	@ln -s ../../scripts/git-hooks/hooks/commit-msg $(GIT_CONFIG_DIR)/hooks/commit-msg
-	@echo  "Done"!
+
+activate-git-hook-pre-commit:
+	@echo "Installing hooks: pre-commit ..."
+	@find .git/hooks/pre-commit -type l -delete 2> /dev/null || true
+	@ln -s ../../scripts/git-hooks/hooks/pre-commit $(GIT_CONFIG_DIR)/hooks/pre-commit
+
+activate-git-hooks: git-hook-commit-msg git-hook-pre-commit
 
 deactivate-git-hooks:
-	@rm $(GIT_CONFIG_DIR)/hooks/pre-commit 2> /dev/null || true
-	@rm $(GIT_CONFIG_DIR)/hooks/commit-msg 2> /dev/null || true
+	@find .git/hooks -type l -delete 2> /dev/null
+
 
 ### actions to manage packages with poetry
 pip-install-poetry:
