@@ -1,3 +1,24 @@
+# using poetry from external venv
+USE_POETRY_IN_VENV ?= false
+POETRY_VENV ?= .poetry-venv
+
+# set poetry command parameters
+PIP_BIN := pip
+POETRY_BIN := poetry
+# overwrite pip and poetry command definitions
+ifeq ($(USE_POETRY_IN_VENV),true)
+POETRY_HOME := $(POETRY_VENV)
+COMMAND_PREFIX := $(POETRY_VENV)/bin/
+# or use pip and poetry in local folder
+else
+COMMAND_PREFIX :=
+POETRY_HOME := .
+endif
+# set poetry command
+POETRY := $(COMMAND_PREFIX)$(POETRY_BIN) --directory=$(POETRY_HOME)
+PIP := $(COMMAND_PREFIX)$(PIP_BIN)
+
+
 ### actions to install static virtualenv
 install:
 	@pip install -r requirements.txt
@@ -7,26 +28,34 @@ install-dev:
 
 
 ### actions to manage packages with poetry
-poetry-cmd:
-	@pip install -U pip poetry
+pip-install-poetry:
+	@if [ $(USE_POETRY_IN_VENV) = true ]; then \
+		python -m venv $(POETRY_VENV); \
+	fi
+	@$(PIP) install -U pip poetry
 
-poetry-recreate-env: poetry-cmd
-	@poetry env remove --all
-	@poetry env use python
+recreate-poetry-env:
+	@$(POETRY) env remove --all
+	@$(POETRY) env use python
 
-poetry-env-install: poetry-recreate-env
-	@poetry install --only main --no-root
-	@poetry export --only main -f requirements.txt --without-hashes | sed 's/ ;.*//g' > requirements.txt
+poetry-install:
+	@$(POETRY) install --no-root
 
-poetry-env-install-dev: poetry-recreate-env
-	@poetry install --with dev --no-root
-	@echo '-r requirements.txt\n' > requirements-dev.txt
-	@poetry export --with dev -f requirements.txt --with dev --without-hashes | sed 's/ ;.*//g' >> requirements-dev.txt
+poetry-export:
+	@echo Building requirements file: requirements.txt
+	@$(POETRY) export --only=main -f requirements.txt --without-hashes | sed 's/ ;.*//g' > requirements.txt
+	@echo Building requirements file: requirements-dev.txt
+	@$(POETRY) export --with=dev -f requirements.txt --without-hashes | sed 's/ ;.*//g' > requirements-dev.txt
 
-poetry-recreate-lock:
-	@make poetry-env-install
-	@make poetry-env-install-dev
-	@poetry env remove --all
+build-requirements-local: pip-install-poetry \
+                          recreate-poetry-env \
+                          poetry-install \
+                          poetry-export
+
+build-requirements-venv:
+	@make USE_POETRY_IN_VENV=true build-requirements-local
+
+build-requirements: build-requirements-venv
 
 
 ### actions to organize and clean project files
@@ -34,7 +63,7 @@ clean-cache-files:
 	@find . -iname '*.pyc' -delete
 	@find . -iname '*.pyo' -delete
 	@find . -name '*,cover' -delete
-	@find ./ -name '*~' -exec rm -f {} \;
+	@find ./ -name '*~' -exec rm -f () \;
 	@find . -iname __pycache__ -delete
 	@rm -rf .cache
 	@rm -rf .mypy_cache
