@@ -26,6 +26,7 @@ flask-marshmallow = "^0.15.0"
 [tool.poetry.group.dev.dependencies]
 ### dev tools
 ipython = "*"
+flask-shell-ipython = "^0.5.1"
 ### formatters
 isort = "^5.12.0"
 black = "^23.3.0"
@@ -60,7 +61,7 @@ minversion = "7.0"
 addopts = "--pylama --mypy --bandit -v -v --tb=long --cache-clear"
 python_files = ["test_*.py"]
 testpaths = [
-    "app",
+    "starwars_api",
     "tests"
 ]
 filterwarnings = [
