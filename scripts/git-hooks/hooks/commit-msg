@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Automatically adds branch name and branch description to every commit message.
+#
+NAME=$(git rev-parse --abbrev-ref HEAD | sed 's/^HEAD$//g')
+MESSAGE=$(cat "$1" | grep -v '^\#\|^$')
+
+if [ -z "$NAME" ];
+then
+    echo "$MESSAGE" > "$1"
+else
+    echo '['"$NAME"'] '"$MESSAGE" > "$1"
+fi

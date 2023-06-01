@@ -17,6 +17,8 @@ endif
 # set poetry command
 POETRY := $(COMMAND_PREFIX)$(POETRY_BIN) --directory=$(POETRY_HOME)
 PIP := $(COMMAND_PREFIX)$(PIP_BIN)
+# git configs
+GIT_CONFIG_DIR := $(shell git rev-parse --git-dir)
 
 
 ### actions to install static virtualenv
@@ -26,6 +28,15 @@ install:
 install-dev:
 	@pip install -r requirements-dev.txt
 
+activate-git-hooks: deactivate-git-hooks
+	@echo "Installing hooks..."
+	@ln -s ../../scripts/git-hooks/hooks/pre-commit $(GIT_CONFIG_DIR)/hooks/pre-commit
+	@ln -s ../../scripts/git-hooks/hooks/commit-msg $(GIT_CONFIG_DIR)/hooks/commit-msg
+	@echo  "Done"!
+
+deactivate-git-hooks:
+	@rm $(GIT_CONFIG_DIR)/hooks/pre-commit 2> /dev/null || true
+	@rm $(GIT_CONFIG_DIR)/hooks/commit-msg 2> /dev/null || true
 
 ### actions to manage packages with poetry
 pip-install-poetry:
@@ -63,7 +74,7 @@ clean-cache-files:
 	@find . -iname '*.pyc' -delete
 	@find . -iname '*.pyo' -delete
 	@find . -name '*,cover' -delete
-	@find ./ -name '*~' -exec rm -f () \;
+	@find ./ -name '*~' -delete
 	@find . -iname __pycache__ -delete
 	@rm -rf .cache
 	@rm -rf .mypy_cache
