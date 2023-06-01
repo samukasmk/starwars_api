@@ -79,6 +79,7 @@ poetry-export:
 
 build-requirements-local: pip-install-poetry \
                           recreate-poetry-env \
+                          clean-poetry-lock-file \
                           poetry-install \
                           poetry-export
 
@@ -121,11 +122,10 @@ fmt:
 
 
 ### actions to run unit tests
-test: clean
+test: fmt clean
 	@pytest --cov=app --cov-report term:skip-covered --cov-report html:htmlcov --junit-xml=coverage.xml
 	@make clean-cache-files
 	@make fix-coverage-permissions
-
 
 ### actions to run security checkers
 sec-check:
