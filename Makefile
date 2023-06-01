@@ -65,6 +65,9 @@ recreate-poetry-env:
 	@$(POETRY) env remove --all
 	@$(POETRY) env use python
 
+clean-poetry-lock-file:
+	@rm poetry.lock 2> /dev/null || true
+
 poetry-install:
 	@$(POETRY) install
 
@@ -87,25 +90,25 @@ build-requirements: build-requirements-venv
 
 ### actions to organize and clean project files
 clean-cache-files:
-	@find . -iname '*.pyc' -delete
-	@find . -iname '*.pyo' -delete
-	@find . -name '*,cover' -delete
-	@find ./ -name '*~' -delete
-	@find . -iname __pycache__ -delete
-	@rm -rf .cache
-	@rm -rf .mypy_cache
-	@rm -fr .coverage
-	@rm -fr .pytest_cache
-	@rm -rf *.egg-info
+	@find . -iname '*.pyc' -delete 2> /dev/null || true
+	@find . -iname '*.pyo' -delete 2> /dev/null || true
+	@find . -name '*,cover' -delete 2> /dev/null || true
+	@find ./ -name '*~' -delete 2> /dev/null || true
+	@find . -iname __pycache__ -delete 2> /dev/null || true
+	@rm -rf .cache 2> /dev/null || true
+	@rm -rf .mypy_cache 2> /dev/null || true
+	@rm -fr .coverage 2> /dev/null || true
+	@rm -fr .pytest_cache 2> /dev/null || true
+	@rm -rf *.egg-info 2> /dev/null || true
 
 clean-coverage-files:
-	@rm -fr htmlcov || true
-	@rm -fr junit.xml || true
-	@rm -fr coverage.xml || true
+	@rm -fr htmlcov 2> /dev/null || true
+	@rm -fr junit.xml 2> /dev/null || true
+	@rm -fr coverage.xml 2> /dev/null || true
 
 fix-coverage-permissions:
-	@chmod 777 coverage.xml || true
-	@chmod -R 777 htmlcov || true
+	@chmod 777 coverage.xml 2> /dev/null || true
+	@chmod -R 777 htmlcov 2> /dev/null || true
 
 clean: clean-cache-files clean-coverage-files
 
