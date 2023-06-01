@@ -4,10 +4,10 @@ DEBUG = false
 # load flask extensions (calling <module>.init_data function)
 EXTENSIONS = [
     # structure's extensions
-    "app.extensions.mongoengine",
-    "extensions.openapi",
+    "starwars_api.extensions.mongodb:init_app",
+    "starwars_api.extensions.openapi:init_app",
     # flask rest apis
-    "app.rest_apis.starwars"
+    "starwars_api.rest_apis.starwars:init_app"
 ]
 
 

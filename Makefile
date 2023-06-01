@@ -66,7 +66,7 @@ recreate-poetry-env:
 	@$(POETRY) env use python
 
 poetry-install:
-	@$(POETRY) install --no-root
+	@$(POETRY) install
 
 poetry-export:
 	@echo Building requirements file: requirements.txt
@@ -99,12 +99,13 @@ clean-cache-files:
 	@rm -rf *.egg-info
 
 clean-coverage-files:
-	@rm -fr htmlcov
-	@rm -fr junit.xml coverage.xml
+	@rm -fr htmlcov || true
+	@rm -fr junit.xml || true
+	@rm -fr coverage.xml || true
 
 fix-coverage-permissions:
-	@chmod 777 ./coverage.xml
-	@chmod -R 777 ./htmlcov
+	@chmod 777 coverage.xml || true
+	@chmod -R 777 htmlcov || true
 
 clean: clean-cache-files clean-coverage-files
 
@@ -128,3 +129,14 @@ sec-check:
 	@pip-audit --requirement requirements.txt
 	@pip-check
 	@safety check
+
+
+## actions to run flask app
+runserver:
+	@gunicorn -b 0.0.0.0:5000 -w 4 'starwars_api.base:create_app_wsgi'
+
+devserver:
+	@python manage.py run
+
+debugserver:
+	@python manage.py run --debug
