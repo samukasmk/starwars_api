@@ -40,7 +40,7 @@ activate-git-hook-pre-commit:
 	@find .git/hooks/pre-commit -type l -delete 2> /dev/null || true
 	@ln -s ../../scripts/git-hooks/hooks/pre-commit $(GIT_CONFIG_DIR)/hooks/pre-commit
 
-activate-git-hooks: git-hook-commit-msg git-hook-pre-commit
+activate-git-hooks: activate-git-hook-commit-msg activate-git-hook-pre-commit
 
 deactivate-git-hooks:
 	@find .git/hooks -type l -delete 2> /dev/null
@@ -112,7 +112,7 @@ fmt:
 test: clean
 	@pytest --cov=app --cov-report term:skip-covered --cov-report html:htmlcov --junit-xml=coverage.xml
 	@make clean-cache-files
-	@make fix-coverage-permission
+	@make fix-coverage-permissions
 
 
 ### actions to run security checkers
