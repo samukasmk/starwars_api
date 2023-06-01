@@ -76,7 +76,7 @@ ignore_missing_imports = true
 [tool.pylama]
 ignore = "E305,C0114"
 format = "pylint"
-skip = "test_*,.git,__pycache__,*/.pytest_cache/*,*/.tox/*,*/.env/*"
+skip = "test_*,.git,.poetry-venv,*/__pycache__/*,*/.pytest_cache/*,*/.tox/*,*/.env/*"
 linters = "pyflakes,pylint,pycodestyle,radon,isort"
 
 [tool.pylama.linter.pylint]
@@ -101,6 +101,8 @@ multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 line_length = 120
+skip_gitignore = true
 
 [tool.black]
 line_length = 120
+extend-exclude = "(scripts/* | .git/* | .poetry-venv/* | */__pycache__/* | */.pytest_cache/* | */.tox/* | */.env/*)"

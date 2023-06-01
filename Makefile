@@ -115,8 +115,8 @@ clean: clean-cache-files clean-coverage-files
 
 ### actions to format the source-code
 fmt:
-	@isort app
-	@black app
+	@isort .
+	@black .
 	@make clean-cache-files
 
 
