@@ -78,7 +78,7 @@ ignore_missing_imports = true
 ignore = "E305,C0114"
 format = "pylint"
 skip = "test_*,.git,__pycache__,*/.pytest_cache/*,*/.tox/*,*/.env/*"
-linters = "pyflakes,pylint,pycodestyle,radon"
+linters = "pyflakes,pylint,pycodestyle,radon,isort"
 
 [tool.pylama.linter.pylint]
 max_line_length = 120

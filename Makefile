@@ -30,17 +30,25 @@ install-dev:
 
 
 ### actions to manage git hooks
-activate-git-hook-commit-msg:
-	@echo "Installing hooks: commit-msg ..."
+activate-commit-msg-fmt:
+	@echo "Installing hook: commit-msg (to format commit messages) ..."
 	@find .git/hooks/commit-msg -type l -delete 2> /dev/null || true
 	@ln -s ../../scripts/git-hooks/hooks/commit-msg $(GIT_CONFIG_DIR)/hooks/commit-msg
 
-activate-git-hook-pre-commit:
-	@echo "Installing hooks: pre-commit ..."
+deactivate-commit-msg-fmt:
+	@echo "Uninstalling hook: commit-msg ..."
+	@find .git/hooks/commit-msg -type l -delete 2> /dev/null || true
+
+activate-commit-checks:
+	@echo "Installing hook: pre-commit (to run 'make test' before commit) ..."
 	@find .git/hooks/pre-commit -type l -delete 2> /dev/null || true
 	@ln -s ../../scripts/git-hooks/hooks/pre-commit $(GIT_CONFIG_DIR)/hooks/pre-commit
 
-activate-git-hooks: activate-git-hook-commit-msg activate-git-hook-pre-commit
+deactivate-commit-checks:
+	@echo "Uninstalling hook: pre-commit ..."
+	@find .git/hooks/pre-commit -type l -delete 2> /dev/null || true
+
+activate-all-git-hooks: activate-commit-msg-fmt activate-commit-checks
 
 deactivate-git-hooks:
 	@find .git/hooks -type l -delete 2> /dev/null
