@@ -79,6 +79,7 @@ poetry-export:
 
 build-requirements-local: pip-install-poetry \
                           recreate-poetry-env \
+                          clean-poetry-lock-file \
                           poetry-install \
                           poetry-export
 
