@@ -1,4 +1,4 @@
-from flask_restful import Resource
+from flask_restx import Resource
 
 from starwars_api.rest_apis.starwars.types import MoviePayload, MoviesPayload
 

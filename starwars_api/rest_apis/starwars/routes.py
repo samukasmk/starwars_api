@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask
-from flask_restful import Api
+from flask_restx import Api
 
 from starwars_api.rest_apis.starwars.views import movie, planet
 

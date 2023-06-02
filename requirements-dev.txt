@@ -24,10 +24,9 @@ dynaconf==3.1.12
 email-validator==2.0.0.post2
 executing==1.2.0
 filelock==3.12.0
-flask-apispec==0.11.4
 flask-marshmallow==0.15.0
 flask-mongoengine==1.0.0
-flask-restful==0.3.10
+flask-restx==1.1.0
 flask-shell-ipython==0.5.1
 flask-wtf==1.1.1
 flask==2.3.2
@@ -42,6 +41,7 @@ isort==5.12.0
 itsdangerous==2.1.2
 jedi==0.18.2
 jinja2==3.1.2
+jsonschema==4.17.3
 lazy-object-proxy==1.9.0
 mando==0.7.1
 markdown-it-py==2.2.0
@@ -80,6 +80,7 @@ pylama==8.4.1
 pylint==2.17.4
 pymongo==4.3.3
 pyparsing==3.0.9
+pyrsistent==0.19.3
 pytest-bandit==0.6.1
 pytest-cov==4.1.0
 pytest-flask==1.2.0
@@ -106,10 +107,9 @@ terminaltables==3.1.10
 toml==0.10.2
 tomlkit==0.11.8
 traitlets==5.9.0
-typing-extensions==4.6.2
+typing-extensions==4.6.3
 urllib3==1.26.16
 wcwidth==0.2.6
-webargs==8.2.0
 webencodings==0.5.1
 werkzeug==2.3.4
 wrapt==1.15.0
