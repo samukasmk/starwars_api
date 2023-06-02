@@ -5,7 +5,7 @@ from starwars_api.extensions.openapi import api
 
 bp = Blueprint("starwars", __name__, url_prefix="/api/starwars")
 
-from starwars_api.rest_apis.starwars.views import movie, planet
+from starwars_api.rest_apis.starwars.endpoints import movie, planet
 
 
 def load_routes(app: Flask) -> None:

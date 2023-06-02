@@ -3,25 +3,24 @@ from flask_restx import Resource, abort
 
 from starwars_api.extensions.openapi import api
 from starwars_api.models.starwars.movie import Movie
-from starwars_api.rest_apis.starwars.openapi_definitions.movie import (
+from starwars_api.rest_apis.starwars.schemas.movie import (
     movie_patch_fields,
     movie_post_fields,
     movie_put_fields,
 )
-from starwars_api.rest_apis.starwars.schemas.movie import MovieSchema
-from starwars_api.rest_apis.starwars.types import MoviePayload, MoviesPayload
+from starwars_api.rest_apis.starwars.serializers.movie import MovieSchema
 
 
 class MovieListCreateAPIResource(Resource):
     """API Endpoint to create and list many movies resource"""
 
-    def get(self) -> MoviesPayload:
+    def get(self) -> list[dict[str, object]]:
         """List all movies data"""
         # get movies documents from mongodb
         try:
             movies = Movie.objects()
         except Exception:
-            return abort(500, "Error on get Movies resources")
+            return abort(500, "Error on get Movies endpoints")
 
         # serialize to json response
         schema = MovieSchema()
@@ -29,7 +28,7 @@ class MovieListCreateAPIResource(Resource):
         return dict_response
 
     @api.expect(movie_post_fields, validate=True)
-    def post(self) -> MoviePayload:
+    def post(self) -> dict[str, object]:
         """Create a movie data"""
         ...
 
@@ -37,7 +36,7 @@ class MovieListCreateAPIResource(Resource):
 class MovieDetailAPIResource(Resource):
     """API Endpoint to retrieve, update, partial update and delete a specific movie resource"""
 
-    def get(self, movie_id: str) -> MoviePayload:
+    def get(self, movie_id: str) -> dict[str, object]:
         """Retrieve a movie data"""
         # get movie document from mongodb by objectId
         try:
@@ -55,7 +54,7 @@ class MovieDetailAPIResource(Resource):
         return dict_response
 
     @api.expect(movie_put_fields, validate=True)
-    def put(self, movie_id: str) -> MoviePayload:
+    def put(self, movie_id: str) -> dict[str, object]:
         """Update a movie data"""
         # get movie document from mongodb by objectId
         try:
@@ -73,7 +72,7 @@ class MovieDetailAPIResource(Resource):
         return dict_response
 
     @api.expect(movie_patch_fields, validate=True)
-    def patch(self, movie_id: str) -> MoviePayload:
+    def patch(self, movie_id: str) -> dict[str, object]:
         """Partial update a movie data"""
         # get movie document from mongodb by objectId
         try:
@@ -90,7 +89,7 @@ class MovieDetailAPIResource(Resource):
         dict_response = schema.dump(movie, many=True)
         return dict_response
 
-    def delete(self, movie_id: str) -> MoviePayload:
+    def delete(self, movie_id: str) -> Response:
         """Delete a movie data"""
         # get movie document from mongodb by objectId
         try:
