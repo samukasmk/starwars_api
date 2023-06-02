@@ -3,6 +3,7 @@ import mongoengine
 
 class Planet(mongoengine.Document):
     """StarWars Planet model object"""
+
     name = mongoengine.StringField(required=True)
     rotation_period = mongoengine.StringField(required=True)
     orbital_period = mongoengine.IntField(required=True)

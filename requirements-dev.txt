@@ -24,6 +24,7 @@ dynaconf==3.1.12
 executing==1.2.0
 filelock==3.12.0
 flask-marshmallow==0.15.0
+flask-reggie==0.0.2
 flask-restx==1.1.0
 flask-shell-ipython==0.5.1
 flask==2.3.2

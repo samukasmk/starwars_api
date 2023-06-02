@@ -3,6 +3,7 @@ import mongoengine
 
 class Movie(mongoengine.Document):
     """StarWars Movie model object"""
+
     title = mongoengine.StringField(required=True)
     opening_crawl = mongoengine.StringField(required=True)
     episode_id = mongoengine.IntField(required=True)
