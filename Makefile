@@ -25,6 +25,8 @@ GIT_CONFIG_DIR := $(shell git rev-parse --git-dir)
 install:
 	@pip install -r requirements.txt
 
+install-prod: install
+
 install-dev:
 	@pip install -r requirements-dev.txt
 
@@ -136,7 +138,7 @@ sec-check:
 
 ## actions to run flask app
 runserver:
-	@gunicorn -b 0.0.0.0:5000 -w 4 'starwars_api.base:create_app_wsgi'
+	@gunicorn --bind 0.0.0.0:5000 -w 4 'starwars_api.base:create_app'
 
 devserver:
 	@python manage.py run
