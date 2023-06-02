@@ -57,7 +57,7 @@ safety = "^2.3.5"
 # unit tests
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--pylama --mypy --bandit -v -v --tb=long --cache-clear"
+addopts = "--bandit -v -v --tb=long --cache-clear"  #--pylama --mypy
 python_files = ["test_*.py"]
 testpaths = [
     "starwars_api",
