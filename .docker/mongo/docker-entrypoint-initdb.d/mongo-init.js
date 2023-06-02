@@ -1,11 +1,11 @@
 print('Start #################################################################');
 
-db = db.getSiblingDB('starwars-api');
+db = db.getSiblingDB('starwars');
 db.createUser(
   {
-    user: 'starwars-api',
-    pwd: 'P4S5w0Rd',
-    roles: [{ role: 'readWrite', db: 'starwars-api' }],
+    user: 'starwars',
+    pwd: 'starwars',
+    roles: [{ role: 'readWrite', db: 'starwars' }],
   },
 );
 db.createCollection('movie');
