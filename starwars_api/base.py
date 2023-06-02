@@ -8,7 +8,7 @@ def load_settings_file(app: Flask, **extra_config) -> None:
     """
     FlaskDynaconf(app, envvar_prefix="FLASK")
     # Initialize project extensions defined in settings.toml
-    app.config.load_extensions("EXTENSIONS")  # type: ignore[attr-defined]
+    app.config.load_extensions("EXTENSIONS")  # NOQA[attr-defined]
     # Overwrite Dynaconf settings from extra config on app creation
     app.config.update(extra_config)
 
