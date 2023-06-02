@@ -1,11 +1,7 @@
 from flask_restx import Resource
 
 from starwars_api.extensions.openapi import api
-from starwars_api.rest_apis.starwars.schemas.planet import (
-    planet_patch_fields,
-    planet_post_fields,
-    planet_put_fields,
-)
+from starwars_api.rest_apis.starwars.schemas.planet import planet_patch_fields, planet_post_fields, planet_put_fields
 
 
 class PlanetListCreateAPIResource(Resource):

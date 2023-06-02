@@ -1,8 +1,8 @@
-from marshmallow_mongoengine import ModelSchema
+from marshmallow_mongoengine import ModelSchema as ModelSerializer
 
 from starwars_api.models.starwars.movie import Movie
 
 
-class MovieSchema(ModelSchema):
+class MovieSerializer(ModelSerializer):
     class Meta:
         model = Movie

@@ -3,12 +3,8 @@ from flask_restx import Resource, abort
 
 from starwars_api.extensions.openapi import api
 from starwars_api.models.starwars.movie import Movie
-from starwars_api.rest_apis.starwars.schemas.movie import (
-    movie_patch_fields,
-    movie_post_fields,
-    movie_put_fields,
-)
-from starwars_api.rest_apis.starwars.serializers.movie import MovieSchema
+from starwars_api.rest_apis.starwars.serializers.movie import MovieSerializer
+from starwars_api.rest_apis.starwars.schemas.movie import movie_patch_fields, movie_post_fields, movie_put_fields
 
 
 class MovieListCreateAPIResource(Resource):
@@ -23,8 +19,8 @@ class MovieListCreateAPIResource(Resource):
             return abort(500, "Error on get Movies endpoints")
 
         # serialize to json response
-        schema = MovieSchema()
-        dict_response = schema.dump(movies, many=True)
+        serializer = MovieSerializer()
+        dict_response = serializer.dump(movies, many=True)
         return dict_response
 
     @api.expect(movie_post_fields, validate=True)
@@ -49,8 +45,8 @@ class MovieDetailAPIResource(Resource):
             return abort(404, "Movie not found")
 
         # serialize to json response
-        schema = MovieSchema()
-        dict_response = schema.dump(movie, many=True)
+        serializer = MovieSerializer()
+        dict_response = serializer.dump(movie, many=True)
         return dict_response
 
     @api.expect(movie_put_fields, validate=True)
@@ -67,8 +63,8 @@ class MovieDetailAPIResource(Resource):
             return abort(404, "Movie not found")
 
         # serialize to json response
-        schema = MovieSchema()
-        dict_response = schema.dump(movie, many=True)
+        serializer = MovieSerializer()
+        dict_response = serializer.dump(movie, many=True)
         return dict_response
 
     @api.expect(movie_patch_fields, validate=True)
@@ -85,8 +81,8 @@ class MovieDetailAPIResource(Resource):
             return abort(404, "Movie not found")
 
         # serialize to json response
-        schema = MovieSchema()
-        dict_response = schema.dump(movie, many=True)
+        serializer = MovieSerializer()
+        dict_response = serializer.dump(movie, many=True)
         return dict_response
 
     def delete(self, movie_id: str) -> Response:

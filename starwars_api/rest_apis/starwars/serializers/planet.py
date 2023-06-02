@@ -1,8 +1,8 @@
-from marshmallow_mongoengine import ModelSchema
+from marshmallow_mongoengine import ModelSchema as ModelSerializer
 
 from starwars_api.models.starwars.planet import Planet
 
 
-class PlanetSchema(ModelSchema):
+class PlanetSerializer(ModelSerializer):
     class Meta:
         model = Planet
