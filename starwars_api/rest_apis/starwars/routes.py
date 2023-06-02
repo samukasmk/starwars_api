@@ -14,13 +14,13 @@ def load_routes(app: Flask) -> None:
     # planet endpoints
     planet_namespace = Namespace("Planets", description="StarWars planets operations", path="/api/starwars")
     planet_namespace.add_resource(planet.PlanetListCreateAPIResource, "/planet/")
-    planet_namespace.add_resource(planet.PlanetDetailAPIResource, "/planet/<int:planet_id>/")
+    planet_namespace.add_resource(planet.PlanetDetailAPIResource, "/planet/<regex('[a-fA-F0-9]{24}'):planet_id>/")
     api.add_namespace(planet_namespace)
 
     # movie endpoints
     movie_namespace = Namespace("Movies", description="StarWars planets operations", path="/api/starwars")
     movie_namespace.add_resource(movie.MovieListCreateAPIResource, "/movie/")
-    movie_namespace.add_resource(movie.MovieDetailAPIResource, "/movie/<int:movie_id>/")
+    movie_namespace.add_resource(movie.MovieDetailAPIResource, "/movie/<regex('[a-fA-F0-9]{24}'):movie_id>/")
     api.add_namespace(movie_namespace)
 
     # register blueprints
