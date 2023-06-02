@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  flask:
+    image: starwars_api
+    restart: always
+    build:
+      context: .
+      args:
+        INSTALL_LIBS: prod
+    ports:
+      - 5000:5000
+    networks:
+      - starwars_api
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_files:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - starwars_api
+
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    networks:
+      - starwars_api
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+
+  unit-tests:
+    image: starwars_api_development
+    # scale 0 disables this service to run on `docker-compose up` command to run the
+    # unit-tests please execute manually the command: `docker-compose run --rm unit-tests`
+    scale: 0
+    build:
+      context: .
+      args:
+        INSTALL_LIBS: dev
+    environment:
+      - FLASK_ENV=testing
+
+
+volumes:
+  mongo_files:
+
+networks:
+  starwars_api:
+    driver: bridge
