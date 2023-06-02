@@ -1,15 +1,6 @@
 [default]
-# disable flask debug
-DEBUG = false
-
-# load flask extensions (calling <module>.init_data function)
-EXTENSIONS = [
-    # structure's extensions
-    "starwars_api.extensions.mongodb:init_app",
-    "starwars_api.extensions.openapi:init_app",
-    # flask rest apis
-    "starwars_api.rest_apis.starwars:init_app"
-]
+# mongodb settings
+MONGODB_HOST = "mongodb://starwars-api:P4S5w0Rd@127.0.0.1:27017/starwars-api"
 
 # swagger settings
 SWAGGER_UI_DOC_EXPANSION = 'list'
@@ -22,6 +13,19 @@ SWAGGER_API_CONTACT = "Samuel Sampaio"
 SWAGGER_API_CONTACT_URL = "https://github.com/samukasmk/starwars_api"
 SWAGGER_API_CONTACT_EMAIL = "samuel.maciel.sampaio@gmail.com"
 
+# flask settings
+DEBUG = false
+
+# load flask extensions (calling <module>.init_data function)
+EXTENSIONS = [
+    # structure's extensions
+    "starwars_api.extensions.mongodb:init_app",
+    "starwars_api.extensions.openapi:init_app",
+    # flask rest apis
+    "starwars_api.rest_apis.starwars:init_app"
+]
+
+
 
 [development]
 DEBUG = true
@@ -30,6 +34,7 @@ DEBUG = true
 
 [testing]
 MONGOENGINE_HOST = 'mock'
+
 
 
 [production]
