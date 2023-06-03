@@ -2,7 +2,7 @@ from typing import Any
 from flask_restx import Resource, abort
 from mongoengine import Document
 from mongoengine.errors import InvalidQueryError, ValidationError
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, BadRequest
 
 from starwars_api.extensions.openapi import api
 
@@ -23,9 +23,8 @@ class MongoDocumentsResource(Resource):
     def abort_on_error(self, action_name: str) -> HTTPException:
         return abort(code=500, message=f"Error on {action_name} {self.model_class.__name__} resource.")
 
-    def abort_on_validation_error(self, exc: Exception) -> HTTPException:
-        exc_message = exc.message.replace('"None"', "null")
-        return abort(code=400, message="Input payload validation failed", errors={exc.field_name: exc_message})
+    def abort_on_validation_error(self, errors: dict | list) -> HTTPException:
+        return abort(code=400, message="Input payload validation failed", errors=errors)
 
     ###
     ### mongo document operations
@@ -61,7 +60,8 @@ class MongoDocumentsResource(Resource):
         except InvalidQueryError:
             raise self.abort_on_unprocessable_entity()
         except ValidationError as exc:
-            raise self.abort_on_validation_error(exc)
+            exc_message = exc.message.replace('"None"', "null")
+            raise self.abort_on_validation_error({exc.field_name: exc_message})
         except Exception:
             raise self.abort_on_error("update")
 
@@ -87,8 +87,15 @@ class MongoDocumentsResource(Resource):
 
     def deserialize_json_payload_to_document(self, api_payload) -> Document:
         """Deserialize json payload to a new mongo document"""
+
         try:
-            return self.serializer_class().load(api_payload)
+            serializer = self.serializer_class()
+            errors = serializer.validate(api_payload)
+            if errors:
+                raise self.abort_on_validation_error(errors)
+            return serializer.load(api_payload)
+        except BadRequest:
+            raise
         except Exception:
             raise self.abort_on_error("deserialize json payload")
 
