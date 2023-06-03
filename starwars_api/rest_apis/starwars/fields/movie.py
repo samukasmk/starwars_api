@@ -2,8 +2,9 @@
 Provides (API schema definitions) for validating input data into API methods like
 (POST, PUT, and PATCH) and automatically building API documentation with Swagger.
 
-Please do not confuse with (marshmallow Schemas) that serves for serialization
-and deserialization basically: converting json text payloads to mongoengine instances.
+Please do not confuse (api.model) fields with:
+- (marshmallow schemas): for serialization and deserialization of json format
+- (mongoengine models): management interface for pymongo documents as pythonic objects
 """
 
 from flask_restx import Model, fields
@@ -11,14 +12,14 @@ from flask_restx import Model, fields
 from starwars_api.extensions.openapi import api
 
 
-def movie_fields(require_all_fields: bool = True) -> Model:
+def movie_fields(all_fields_is_required: bool = True) -> Model:
     """OpenAPI field schemas for Movie"""
     return api.model(  # type:ignore
         "Movie",
         {
-            "title": fields.String(required=require_all_fields, default="The Phantom Menace"),
+            "title": fields.String(required=all_fields_is_required, default="The Phantom Menace"),
             "opening_crawl": fields.String(
-                required=require_all_fields,
+                required=all_fields_is_required,
                 default=(
                     "Turmoil has engulfed the\r\nGalactic Republic. The taxation\r\n"
                     "of trade routes to outlying star\r\nsystems is in dispute.\r\n\r\nHoping to resolve the matter\r\n"
@@ -29,15 +30,17 @@ def movie_fields(require_all_fields: bool = True) -> Model:
                     "galaxy, to settle the conflict...."
                 ),
             ),
-            "episode_id": fields.Integer(required=require_all_fields, default=1),
-            "director": fields.String(required=require_all_fields, default="George Lucas"),
-            "producer": fields.String(required=require_all_fields, default="Rick McCallum"),
-            "release_date": fields.Date(required=require_all_fields, default="1999-05-19"),
+            "episode_id": fields.Integer(required=all_fields_is_required, default=1),
+            "director": fields.String(required=all_fields_is_required, default="George Lucas"),
+            "producer": fields.String(required=all_fields_is_required, default="Rick McCallum"),
+            "release_date": fields.Date(required=all_fields_is_required, default="1999-05-19"),
             "planets": fields.List(fields.Integer(min=1), default=[1, 2, 3]),
         },
     )
 
 
-movie_post_fields = movie_fields(require_all_fields=True)
-movie_put_fields = movie_fields(require_all_fields=True)
-movie_patch_fields = movie_fields(require_all_fields=False)
+# build field requirements to assign in @api.expect(...) decorators
+class MovieAPIFields:
+    post = movie_fields(all_fields_is_required=True)
+    put = movie_fields(all_fields_is_required=True)
+    patch = movie_fields(all_fields_is_required=False)

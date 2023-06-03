@@ -1,44 +1,49 @@
-from flask_restx import Resource
+from flask import Response
+from werkzeug.exceptions import HTTPException
 
 from starwars_api.extensions.openapi import api
-from starwars_api.rest_apis.starwars.schemas.planet import planet_patch_fields, planet_post_fields, planet_put_fields
+from starwars_api.models.starwars.planet import Planet
+from starwars_api.rest_apis.starwars.endpoints.base import DetailAPIResource, ListCreateAPIResource
+from starwars_api.rest_apis.starwars.fields.planet import PlanetAPIFields
+from starwars_api.rest_apis.starwars.serializers.planet import PlanetSerializer
 
 
-class PlanetListCreateAPIResource(Resource):
-    """
-    API Endpoint to create and list many planets resource
-    """
+class PlanetListCreateAPIResource(ListCreateAPIResource):
+    """API Endpoint to create and list planets resources"""
 
-    def get(self) -> list[dict[str, object]]:
-        """List all planets data"""
-        ...
+    model_class = Planet
+    serializer_class = PlanetSerializer
 
-    @api.expect(planet_post_fields, validate=True)
-    def post(self) -> dict[str, object]:
-        """Create a Planet data"""
-        ...
+    def get(self) -> Response | HTTPException:
+        """List all planets resources"""
+        return super().list()
+
+    @api.expect(PlanetAPIFields.post, validate=True)
+    def post(self) -> Response | HTTPException:
+        """Create a planet resource"""
+        return super().create()
 
 
-class PlanetDetailAPIResource(Resource):
-    """
-    API Endpoint to retrieve, update, partial update
-    and delete a specific planet resource
-    """
+class PlanetDetailAPIResource(DetailAPIResource):
+    """API Endpoint to retrieve, update, partial update and delete a specific planet resource"""
 
-    def get(self, planet_id: int) -> dict[str, object]:
-        """Retrieve a Planet data"""
-        ...
+    model_class = Planet
+    serializer_class = PlanetSerializer
 
-    @api.expect(planet_put_fields, validate=True)
-    def put(self, planet_id: int) -> dict[str, object]:
-        """Update a Planet data"""
-        ...
+    def get(self, planet_id: str) -> Response | HTTPException:
+        """Retrieve a planet resource"""
+        return super().retrieve(planet_id)
 
-    @api.expect(planet_patch_fields, validate=True)
-    def patch(self, planet_id: int) -> dict[str, object]:
-        """Partial update a Planet data"""
-        ...
+    @api.expect(PlanetAPIFields.put, validate=True)
+    def put(self, planet_id: str) -> Response | HTTPException:
+        """Update a planet resource"""
+        return super().update(planet_id)
 
-    def delete(self, planet_id: int) -> dict[str, object]:
-        """Delete a Planet data"""
-        ...
+    @api.expect(PlanetAPIFields.patch, validate=True)
+    def patch(self, planet_id: str) -> Response | HTTPException:
+        """Partial update a planet resource"""
+        return super().update(planet_id)
+
+    def delete(self, planet_id: str) -> Response | HTTPException:
+        """Delete a planet resource"""
+        return super().destroy(planet_id)
