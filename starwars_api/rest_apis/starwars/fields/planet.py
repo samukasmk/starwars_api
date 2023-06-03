@@ -18,7 +18,7 @@ def planet_fields(all_fields_is_required: bool = True) -> Model:
         "Planet",
         {
             "name": fields.String(required=all_fields_is_required, default="Tatooine"),
-            "rotation_period": fields.String(required=all_fields_is_required, default=23),
+            "rotation_period": fields.Integer(required=all_fields_is_required, default=23),
             "orbital_period": fields.Integer(required=all_fields_is_required, default=304),
             "diameter": fields.Integer(required=all_fields_is_required, default=10465),
             "climate": fields.String(required=all_fields_is_required, default="arid"),
@@ -26,7 +26,6 @@ def planet_fields(all_fields_is_required: bool = True) -> Model:
             "terrain": fields.String(required=all_fields_is_required, default="desert"),
             "surface_water": fields.Integer(required=all_fields_is_required, default=1),
             "population": fields.Integer(required=all_fields_is_required, default=200000),
-            "movies": fields.List(fields.Integer(min=1), default=[1, 2, 3]),
         },
     )
 
