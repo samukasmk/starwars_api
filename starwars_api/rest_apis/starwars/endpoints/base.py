@@ -1,7 +1,7 @@
 from flask import Response
 from flask_restx import Resource, abort
 from werkzeug.exceptions import HTTPException
-
+from mongoengine.errors import ValidationError, InvalidQueryError
 from starwars_api.extensions.openapi import api
 
 
@@ -10,10 +10,17 @@ class ResourceBase(Resource):
     serializer_class = None
 
     def abort_on_not_found(self):
-        return abort(code=404, message=f"{self.model_class.__name__} resource not found")
+        return abort(code=404, message=f"{self.model_class.__name__} resource not found.")
+
+    def abort_on_unprocessable_entity(self):
+        return abort(code=422, message="Unprocessable resource, please check your payload field definitions.")
 
     def abort_on_error(self, action):
-        return abort(code=500, message=f"Error on {action} {self.model_class.__name__} resource")
+        return abort(code=500, message=f"Error on {action} {self.model_class.__name__} resource.")
+
+    def abort_on_validation_error(self, exc):
+        exc_message = exc.message.replace('"None"', "null")
+        return abort(code=400, message="Input payload validation failed", errors={exc.field_name: exc_message})
 
 
 class ListCreateAPIResource(ResourceBase):
@@ -26,14 +33,14 @@ class ListCreateAPIResource(ResourceBase):
         try:
             mongo_documents = self.model_class.objects()
         except Exception:
-            return self.abort_on_error('get')
+            raise self.abort_on_error('get')
 
         # serialize found mongo documents to json response
         try:
             serializer = self.serializer_class(many=True)
             response_dict = serializer.dump(mongo_documents)
         except Exception:
-            return self.abort_on_error('serialize to json')
+            raise self.abort_on_error('serialize to json')
 
         return response_dict
 
@@ -45,13 +52,13 @@ class ListCreateAPIResource(ResourceBase):
             serializer = self.serializer_class()
             mongo_document = serializer.load(api.payload)
         except Exception:
-            return self.abort_on_error('deserialize json payload')
+            raise self.abort_on_error('deserialize json payload')
 
         # create document in mongo
         try:
             mongo_document.save()
         except Exception:
-            return self.abort_on_error('create')
+            raise self.abort_on_error('create')
 
         # serialize created mongo document to json response
         response_dict = serializer.dump(mongo_document)
@@ -69,18 +76,18 @@ class DetailAPIResource(ResourceBase):
         try:
             mongo_document = self.model_class.objects.with_id(object_id=mongo_document_id)
         except Exception:
-            return self.abort_on_error('get')
+            raise self.abort_on_error('get')
 
         # check if mongo document was found
         if not mongo_document:
-            return self.abort_on_not_found()
+            raise self.abort_on_not_found()
 
         # serialize found mongo document to json response
         try:
             serializer = self.serializer_class()
             response_dict = serializer.dump(mongo_document)
         except Exception:
-            return self.abort_on_error('serialize to json')
+            raise self.abort_on_error('serialize to json')
 
         return response_dict
 
@@ -91,11 +98,11 @@ class DetailAPIResource(ResourceBase):
         try:
             mongo_document = self.model_class.objects.with_id(object_id=mongo_document_id)
         except Exception:
-            return self.abort_on_error('find')
+            raise self.abort_on_error('find')
 
         # check if mongo document was found
         if not mongo_document:
-            return self.abort_on_not_found()
+            raise self.abort_on_not_found()
 
         # remove id field to prevent duplicity failures
         api.payload.pop("id", None)
@@ -104,15 +111,19 @@ class DetailAPIResource(ResourceBase):
         try:
             mongo_document.update(**api.payload)
             mongo_document.reload()
+        except InvalidQueryError:
+            raise self.abort_on_unprocessable_entity()
+        except ValidationError as exc:
+            raise self.abort_on_validation_error(exc)
         except Exception:
-            return self.abort_on_error('update')
+            raise self.abort_on_error('update')
 
         # serialize updated mongo document to json response
         try:
             serializer = self.serializer_class()
             response_dict = serializer.dump(mongo_document)
         except Exception:
-            return self.abort_on_error('serialize to json')
+            raise self.abort_on_error('serialize to json')
 
         return response_dict
 
@@ -123,16 +134,16 @@ class DetailAPIResource(ResourceBase):
         try:
             mongo_document = self.model_class.objects.with_id(object_id=mongo_document_id)
         except Exception:
-            return self.abort_on_error('find')
+            raise self.abort_on_error('find')
 
         # check if mongo document exists
         if not mongo_document:
-            return self.abort_on_not_found()
+            raise self.abort_on_not_found()
 
         # delete mongo document
         try:
             mongo_document.delete()
         except Exception:
-            return self.abort_on_error('delete')
+            raise self.abort_on_error('delete')
 
         return Response(status=204)
