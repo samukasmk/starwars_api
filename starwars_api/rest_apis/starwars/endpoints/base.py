@@ -5,7 +5,7 @@ from mongoengine.errors import ValidationError, InvalidQueryError
 from starwars_api.extensions.openapi import api
 
 
-class ResourceBase(Resource):
+class MongoDocumentsResource(Resource):
     model_class = None
     serializer_class = None
 
@@ -15,102 +15,41 @@ class ResourceBase(Resource):
     def abort_on_unprocessable_entity(self):
         return abort(code=422, message="Unprocessable resource, please check your payload field definitions.")
 
-    def abort_on_error(self, action):
-        return abort(code=500, message=f"Error on {action} {self.model_class.__name__} resource.")
+    def abort_on_error(self, action_name):
+        return abort(code=500, message=f"Error on {action_name} {self.model_class.__name__} resource.")
 
     def abort_on_validation_error(self, exc):
         exc_message = exc.message.replace('"None"', "null")
         return abort(code=400, message="Input payload validation failed", errors={exc.field_name: exc_message})
 
-
-class ListCreateAPIResource(ResourceBase):
-    """API Endpoint to create and list many mongo documents"""
-
-    def list(self) -> Response | HTTPException:
-        """List all mongo documents"""
-
+    def get_all_documents(self):
         # get mongo documents
         try:
-            mongo_documents = self.model_class.objects()
+            return self.model_class.objects()
         except Exception:
             raise self.abort_on_error('get')
 
-        # serialize found mongo documents to json response
+    def get_document_by_object_id(self, object_id):
+        """Get mongo document by objectId or raise if not exists"""
         try:
-            serializer = self.serializer_class(many=True)
-            response_dict = serializer.dump(mongo_documents)
+            mongo_document = self.model_class.objects.with_id(object_id=object_id)
         except Exception:
-            raise self.abort_on_error('serialize to json')
+            raise self.abort_on_error('retrieve')
+        if not mongo_document:
+            raise self.abort_on_not_found()
+        return mongo_document
 
-        return response_dict
-
-    def create(self) -> Response | HTTPException:
-        """Create a mongo document"""
-
-        # deserialize json payload to a new mongo document
-        try:
-            serializer = self.serializer_class()
-            mongo_document = serializer.load(api.payload)
-        except Exception:
-            raise self.abort_on_error('deserialize json payload')
-
-        # create document in mongo
+    def create_new_document(self, mongo_document):
+        """"Create document in mongo saving new instance"""
         try:
             mongo_document.save()
         except Exception:
             raise self.abort_on_error('create')
 
-        # serialize created mongo document to json response
-        response_dict = serializer.dump(mongo_document)
-
-        return response_dict
-
-
-class DetailAPIResource(ResourceBase):
-    """API Endpoint to retrieve, update, partial update and delete a specific mongo document"""
-
-    def retrieve(self, mongo_document_id: str) -> Response | HTTPException:
-        """Retrieve a mongo document"""
-
-        # get mongo document by objectId
-        try:
-            mongo_document = self.model_class.objects.with_id(object_id=mongo_document_id)
-        except Exception:
-            raise self.abort_on_error('get')
-
-        # check if mongo document was found
-        if not mongo_document:
-            raise self.abort_on_not_found()
-
-        # serialize found mongo document to json response
-        try:
-            serializer = self.serializer_class()
-            response_dict = serializer.dump(mongo_document)
-        except Exception:
-            raise self.abort_on_error('serialize to json')
-
-        return response_dict
-
-    def update(self, mongo_document_id: str) -> Response | HTTPException:
-        """Update a mongo_document"""
-
-        # get mongo document by objectId
-        try:
-            mongo_document = self.model_class.objects.with_id(object_id=mongo_document_id)
-        except Exception:
-            raise self.abort_on_error('find')
-
-        # check if mongo document was found
-        if not mongo_document:
-            raise self.abort_on_not_found()
-
-        # remove id field to prevent duplicity failures
-        api.payload.pop("id", None)
-
-        # update mongo document in mongo with new data
+    def update_document(self, mongo_document, api_payload):
+        """Update mongo document in mongo with new data"""
         try:
             mongo_document.update(**api.payload)
-            mongo_document.reload()
         except InvalidQueryError:
             raise self.abort_on_unprocessable_entity()
         except ValidationError as exc:
@@ -118,32 +57,66 @@ class DetailAPIResource(ResourceBase):
         except Exception:
             raise self.abort_on_error('update')
 
-        # serialize updated mongo document to json response
         try:
-            serializer = self.serializer_class()
-            response_dict = serializer.dump(mongo_document)
+            mongo_document.reload()
         except Exception:
-            raise self.abort_on_error('serialize to json')
+            raise self.abort_on_error('reload')
+        return mongo_document
 
-        return response_dict
-
-    def destroy(self, mongo_document_id: str) -> Response | HTTPException:
-        """Delete a mongo_document"""
-
-        # get mongo document by objectId
-        try:
-            mongo_document = self.model_class.objects.with_id(object_id=mongo_document_id)
-        except Exception:
-            raise self.abort_on_error('find')
-
-        # check if mongo document exists
-        if not mongo_document:
-            raise self.abort_on_not_found()
-
-        # delete mongo document
+    def delete_document(self, mongo_document):
+        """Delete mongo document"""
         try:
             mongo_document.delete()
         except Exception:
             raise self.abort_on_error('delete')
 
-        return Response(status=204)
+    def serialize_document_to_json(self, mongo_document, many=False):
+        """Serialize found mongo document to json response"""
+        try:
+            return self.serializer_class(many=many).dump(mongo_document)
+        except Exception:
+            raise self.abort_on_error('serialize to json')
+
+    def deserialize_json_payload_to_document(self, api_payload):
+        """Deserialize json payload to a new mongo document"""
+        try:
+            return self.serializer_class().load(api_payload)
+        except Exception:
+            raise self.abort_on_error('deserialize json payload')
+
+
+class ListCreateAPIResource(MongoDocumentsResource):
+    """API Endpoint to create and list many mongo documents"""
+
+    def list(self) -> Response | HTTPException:
+        """List all mongo documents"""
+        mongo_documents = self.get_all_documents()
+        return self.serialize_document_to_json(mongo_documents, many=True)
+
+    def create(self) -> Response | HTTPException:
+        """Create a mongo document"""
+        mongo_document = self.deserialize_json_payload_to_document(api.payload)
+        self.create_new_document(mongo_document)
+        return self.serialize_document_to_json(mongo_document)
+
+
+class DetailAPIResource(MongoDocumentsResource):
+    """API Endpoint to retrieve, update, partial update and delete a specific mongo document"""
+
+    def retrieve(self, object_id: str) -> Response | HTTPException:
+        """Retrieve a mongo document"""
+        mongo_document = self.get_document_by_object_id(object_id)
+        return self.serialize_document_to_json(mongo_document)
+
+    def update(self, object_id: str) -> Response | HTTPException:
+        """Update a mongo_document"""
+        api.payload.pop("id", None)
+        mongo_document = self.get_document_by_object_id(object_id)
+        mongo_document = self.update_document(mongo_document, api.payload)
+        return self.serialize_document_to_json(mongo_document)
+
+    def destroy(self, object_id: str) -> tuple:
+        """Delete a mongo document"""
+        mongo_document = self.get_document_by_object_id(object_id)
+        self.delete_document(mongo_document)
+        return ('', 204)
