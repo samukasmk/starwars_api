@@ -56,6 +56,14 @@ class MongoDocumentsResource(Resource):
     def update_document(self, mongo_document, api_payload) -> Document:
         """Update mongo document in mongo with new data"""
         try:
+            errors = self.serializer_class().validate(api_payload)
+        except Exception:
+            raise self.abort_on_error("deserialize json payload")
+
+        if errors:
+            raise self.abort_on_validation_error(errors)
+
+        try:
             mongo_document.update(**api.payload)
         except InvalidQueryError:
             raise self.abort_on_unprocessable_entity()
@@ -125,7 +133,6 @@ class DetailAPIResource(MongoDocumentsResource):
 
     def update(self, object_id: str) -> dict[Any, Any]:
         """Update a mongo_document"""
-        api.payload.pop("id", None)
         mongo_document = self.get_document_by_object_id(object_id)
         mongo_document = self.update_document(mongo_document, api.payload)
         return self.serialize_document_to_json(mongo_document)

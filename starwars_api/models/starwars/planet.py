@@ -5,7 +5,7 @@ class Planet(mongoengine.Document):
     """StarWars Planet model object"""
 
     name = mongoengine.StringField(required=True)
-    rotation_period = mongoengine.StringField(required=True)
+    rotation_period = mongoengine.IntField(required=True)
     orbital_period = mongoengine.IntField(required=True)
     diameter = mongoengine.IntField(required=True)
     climate = mongoengine.StringField(required=True)

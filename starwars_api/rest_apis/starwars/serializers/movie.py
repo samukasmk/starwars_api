@@ -4,7 +4,7 @@ from starwars_api.models.starwars.movie import Movie
 
 
 class MovieSerializer(ModelSerializer):
-    _id = fields.Str(attribute='id', dump_only=True)
+    id = fields.Str(dump_only=True)
 
     class Meta:
         model = Movie
