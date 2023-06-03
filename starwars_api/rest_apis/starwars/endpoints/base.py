@@ -1,7 +1,8 @@
 from flask import Response
 from flask_restx import Resource, abort
+from mongoengine.errors import InvalidQueryError, ValidationError
 from werkzeug.exceptions import HTTPException
-from mongoengine.errors import ValidationError, InvalidQueryError
+
 from starwars_api.extensions.openapi import api
 
 
@@ -9,6 +10,9 @@ class MongoDocumentsResource(Resource):
     model_class = None
     serializer_class = None
 
+    ###
+    ### exceptions to raise on operation methods
+    ###
     def abort_on_not_found(self):
         return abort(code=404, message=f"{self.model_class.__name__} resource not found.")
 
@@ -22,29 +26,32 @@ class MongoDocumentsResource(Resource):
         exc_message = exc.message.replace('"None"', "null")
         return abort(code=400, message="Input payload validation failed", errors={exc.field_name: exc_message})
 
+    ###
+    ### mongo document operations
+    ###
     def get_all_documents(self):
-        # get mongo documents
+        """Get all mongo documents"""
         try:
             return self.model_class.objects()
         except Exception:
-            raise self.abort_on_error('get')
+            raise self.abort_on_error("get")
 
     def get_document_by_object_id(self, object_id):
         """Get mongo document by objectId or raise if not exists"""
         try:
             mongo_document = self.model_class.objects.with_id(object_id=object_id)
         except Exception:
-            raise self.abort_on_error('retrieve')
+            raise self.abort_on_error("retrieve")
         if not mongo_document:
             raise self.abort_on_not_found()
         return mongo_document
 
     def create_new_document(self, mongo_document):
-        """"Create document in mongo saving new instance"""
+        """ "Create document in mongo saving new instance"""
         try:
             mongo_document.save()
         except Exception:
-            raise self.abort_on_error('create')
+            raise self.abort_on_error("create")
 
     def update_document(self, mongo_document, api_payload):
         """Update mongo document in mongo with new data"""
@@ -55,12 +62,12 @@ class MongoDocumentsResource(Resource):
         except ValidationError as exc:
             raise self.abort_on_validation_error(exc)
         except Exception:
-            raise self.abort_on_error('update')
+            raise self.abort_on_error("update")
 
         try:
             mongo_document.reload()
         except Exception:
-            raise self.abort_on_error('reload')
+            raise self.abort_on_error("reload")
         return mongo_document
 
     def delete_document(self, mongo_document):
@@ -68,25 +75,25 @@ class MongoDocumentsResource(Resource):
         try:
             mongo_document.delete()
         except Exception:
-            raise self.abort_on_error('delete')
+            raise self.abort_on_error("delete")
 
     def serialize_document_to_json(self, mongo_document, many=False):
         """Serialize found mongo document to json response"""
         try:
             return self.serializer_class(many=many).dump(mongo_document)
         except Exception:
-            raise self.abort_on_error('serialize to json')
+            raise self.abort_on_error("serialize to json")
 
     def deserialize_json_payload_to_document(self, api_payload):
         """Deserialize json payload to a new mongo document"""
         try:
             return self.serializer_class().load(api_payload)
         except Exception:
-            raise self.abort_on_error('deserialize json payload')
+            raise self.abort_on_error("deserialize json payload")
 
 
 class ListCreateAPIResource(MongoDocumentsResource):
-    """API Endpoint to create and list many mongo documents"""
+    """Resource base class to create and list many mongo documents"""
 
     def list(self) -> Response | HTTPException:
         """List all mongo documents"""
@@ -101,7 +108,7 @@ class ListCreateAPIResource(MongoDocumentsResource):
 
 
 class DetailAPIResource(MongoDocumentsResource):
-    """API Endpoint to retrieve, update, partial update and delete a specific mongo document"""
+    """Resource base class to retrieve, update, partial update and delete a specific mongo document"""
 
     def retrieve(self, object_id: str) -> Response | HTTPException:
         """Retrieve a mongo document"""
@@ -119,4 +126,4 @@ class DetailAPIResource(MongoDocumentsResource):
         """Delete a mongo document"""
         mongo_document = self.get_document_by_object_id(object_id)
         self.delete_document(mongo_document)
-        return ('', 204)
+        return ("", 204)
