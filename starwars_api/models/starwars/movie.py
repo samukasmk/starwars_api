@@ -1,5 +1,7 @@
 import mongoengine
+
 from starwars_api.models.starwars.planet import Planet
+
 
 class Movie(mongoengine.Document):
     """StarWars Movie model object"""

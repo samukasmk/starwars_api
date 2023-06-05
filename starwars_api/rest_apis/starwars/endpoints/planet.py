@@ -1,8 +1,10 @@
 from typing import Any
+
 from starwars_api.extensions.openapi import api
 from starwars_api.models.starwars.planet import Planet
 from starwars_api.rest_apis.starwars.endpoints.base import DetailAPIResource, ListCreateAPIResource
 from starwars_api.rest_apis.starwars.fields.planet import PlanetAPIFields
+from starwars_api.rest_apis.starwars.queries.planet import planet_movies_aggregation
 from starwars_api.rest_apis.starwars.serializers.planet import PlanetSerializer
 
 
@@ -14,6 +16,7 @@ class PlanetListCreateAPIResource(ListCreateAPIResource):
 
     def get(self) -> dict[Any, Any]:  # TODO: fix typing to list[dict[Any, Any]]
         """List all planets resources"""
+        self.aggregations = planet_movies_aggregation
         return super().list()
 
     @api.expect(PlanetAPIFields.post, validate=True)
@@ -30,6 +33,7 @@ class PlanetDetailAPIResource(DetailAPIResource):
 
     def get(self, planet_id: str) -> dict[Any, Any]:
         """Retrieve a planet resource"""
+        self.aggregations = planet_movies_aggregation
         return super().retrieve(planet_id)
 
     @api.expect(PlanetAPIFields.put, validate=True)

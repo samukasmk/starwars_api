@@ -1,4 +1,5 @@
-from marshmallow_mongoengine import fields, ModelSchema as ModelSerializer
+from marshmallow_mongoengine import ModelSchema as ModelSerializer
+from marshmallow_mongoengine import fields
 
 from starwars_api.models.starwars.movie import Movie
 
@@ -8,6 +9,3 @@ class MovieSerializer(ModelSerializer):
 
     class Meta:
         model = Movie
-
-
-

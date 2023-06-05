@@ -13,6 +13,3 @@ class Planet(mongoengine.Document):
     terrain = mongoengine.StringField(required=True)
     surface_water = mongoengine.IntField(required=True)
     population = mongoengine.IntField(required=True)
-
-    # TODO: move this: IntegerField to: mongoengine.ReferenceField(User, reverse_delete_rule=mongoengine.CASCADE)
-    movies = mongoengine.ListField(mongoengine.IntField())
