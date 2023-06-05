@@ -26,7 +26,7 @@ def planet_fields(require_all_fields: bool = True) -> Model:
             "gravity": fields.String(required=require_all_fields, default="1 standard"),
             "terrain": fields.String(required=require_all_fields, default="desert"),
             "surface_water": fields.Integer(required=require_all_fields, default=1),
-            "population": fields.Integer(required=require_all_fields, default=200000),
+            "population": fields.String(required=require_all_fields, default="200000"),
         },
     )
 
