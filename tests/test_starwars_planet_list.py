@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 from starwars_api.models.starwars.planet import Planet
-from tests.datasets.planets import sample_planet_api_requests
+from tests.datasets.planets import sample_planets_api_requests
 
 
 def test_starwars_planet_list_empty(app, client):
@@ -15,7 +15,7 @@ def test_starwars_planet_list_empty(app, client):
 
 
 @pytest.mark.freeze_time("2023-05-05")
-def test_starwars_planet_list_(client, mock_planet_models):
+def test_starwars_planet_list_many(client, mock_planet_models):
     # check creation
     assert len(Planet.objects()) == 6
 
@@ -32,4 +32,4 @@ def test_starwars_planet_list_(client, mock_planet_models):
         assert json_resource.pop("created_at", None) == datetime.now().isoformat()
         assert json_resource.pop("updated_at", None) == datetime.now().isoformat()
         # check static values
-        assert json_resource == sample_planet_api_requests()[idx]
+        assert json_resource == sample_planets_api_requests()[idx]

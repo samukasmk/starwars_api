@@ -3,7 +3,7 @@ import pytest
 from starwars_api.models.starwars.movie import Movie
 from starwars_api.models.starwars.planet import Planet
 from tests.datasets.movies import sample_movies_api_requests
-from tests.datasets.planets import sample_planet_api_requests
+from tests.datasets.planets import sample_planets_api_requests
 
 
 @pytest.fixture(scope="function")
@@ -14,7 +14,7 @@ def mock_planet_models(app):
 
     # create planet models
     mocked_planet_models = [Planet(**planet_requested_payload).save()
-                            for planet_requested_payload in sample_planet_api_requests()]
+                            for planet_requested_payload in sample_planets_api_requests()]
 
     # ensure test case is builted success
     assert Planet.objects().count() == 6

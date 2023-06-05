@@ -1,4 +1,4 @@
-def sample_planet_api_requests():
+def sample_planets_api_requests():
     return [
         {
             "name": "Tatooine",
