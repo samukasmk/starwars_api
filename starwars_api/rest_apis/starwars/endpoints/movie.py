@@ -3,8 +3,8 @@ from typing import Any
 from starwars_api.extensions.openapi import api
 from starwars_api.models.starwars.movie import Movie
 from starwars_api.rest_apis.starwars.endpoints.base import DetailAPIResource, ListCreateAPIResource
-from starwars_api.rest_apis.starwars.fields.movie import MovieAPIFields
 from starwars_api.rest_apis.starwars.serializers.movie import MovieSerializer
+from starwars_api.rest_apis.starwars.validators.movie import MovieAPIValidator
 
 
 class MovieListCreateAPIResource(ListCreateAPIResource):
@@ -13,11 +13,12 @@ class MovieListCreateAPIResource(ListCreateAPIResource):
     model_class = Movie
     serializer_class = MovieSerializer
 
+    @api.expect(MovieAPIValidator.displaying_parameters)
     def get(self) -> dict[Any, Any]:  # TODO: fix typing to list[dict[Any, Any]]
         """List all movies resources"""
         return super().list()
 
-    @api.expect(MovieAPIFields.post, validate=True)
+    @api.expect(MovieAPIValidator.creating_payload, validate=True)
     def post(self) -> dict[Any, Any]:
         """Create a movie resource"""
         return super().create()
@@ -29,16 +30,17 @@ class MovieDetailAPIResource(DetailAPIResource):
     model_class = Movie
     serializer_class = MovieSerializer
 
+    @api.expect(MovieAPIValidator.displaying_parameters)
     def get(self, movie_id: str) -> dict[Any, Any]:
         """Retrieve a movie resource"""
         return super().retrieve(movie_id)
 
-    @api.expect(MovieAPIFields.put, validate=True)
+    @api.expect(MovieAPIValidator.updating_payload, validate=True)
     def put(self, movie_id: str) -> dict[Any, Any]:
         """Update a movie resource"""
         return super().update(movie_id)
 
-    @api.expect(MovieAPIFields.patch, validate=True)
+    @api.expect(MovieAPIValidator.partial_updating_payload, validate=True)
     def patch(self, movie_id: str) -> dict[Any, Any]:
         """Partial update a movie resource"""
         return super().update(movie_id)
