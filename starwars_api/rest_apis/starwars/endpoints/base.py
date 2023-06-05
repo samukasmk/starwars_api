@@ -33,12 +33,9 @@ class MongoDocumentsResource(Resource):
     def retrive_document_by_object_id(self, object_id: str) -> Document:
         """Get mongo document by objectId or raise if not exists"""
         try:
-            mongo_document = self.get_documents(id=object_id)
+            return self.get_documents(id=object_id)
         except Exception:
             raise self.abort_on_error("retrieve")
-        if not mongo_document:
-            raise self.abort_on_not_found()
-        return mongo_document
 
     def create_new_document(self, mongo_document) -> None:
         """ "Create document in mongo saving new instance"""
@@ -123,9 +120,6 @@ class MongoDocumentsResource(Resource):
     def serialize_documents_to_json(self, mongo_documents, many=False) -> dict[Any, Any]:
         """Serialize found mongo document to json response"""
         try:
-            # get first object from list
-            if many is False and isinstance(mongo_documents, list):
-                mongo_documents = mongo_documents[0]
             return self.serializer_class(many=many).dump(mongo_documents)
         except Exception as exc:
             raise self.abort_on_error("serialize to json")
@@ -184,16 +178,22 @@ class DetailAPIResource(MongoDocumentsResource):
         mongo_documents = self.retrive_document_by_object_id(object_id)
         if self.aggregations:
             mongo_documents = self.normalize_aggregated_results(mongo_documents)
-        return self.serialize_documents_to_json(mongo_documents)
+        if not mongo_documents:
+            raise self.abort_on_not_found()
+        return self.serialize_documents_to_json(mongo_documents[0])
 
     def update(self, object_id: str) -> dict[Any, Any]:
         """Update a mongo_document"""
         mongo_document = self.retrive_document_by_object_id(object_id)
+        if not mongo_document:
+            raise self.abort_on_not_found()
         mongo_document = self.update_document(mongo_document, api.payload)
         return self.serialize_documents_to_json(mongo_document)
 
     def destroy(self, object_id: str) -> tuple:
         """Delete a mongo document"""
         mongo_document = self.retrive_document_by_object_id(object_id)
+        if not mongo_document:
+            raise self.abort_on_not_found()
         self.delete_document(mongo_document)
         return ("", 204)
