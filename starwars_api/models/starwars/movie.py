@@ -1,9 +1,10 @@
 import mongoengine
 
+from starwars_api.models.starwars.base import BaseDocument
 from starwars_api.models.starwars.planet import Planet
 
 
-class Movie(mongoengine.Document):
+class Movie(BaseDocument):
     """StarWars Movie model object"""
 
     title = mongoengine.StringField(required=True)

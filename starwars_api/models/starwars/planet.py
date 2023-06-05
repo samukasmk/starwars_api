@@ -1,7 +1,9 @@
 import mongoengine
 
+from starwars_api.models.starwars.base import BaseDocument
 
-class Planet(mongoengine.Document):
+
+class Planet(BaseDocument):
     """StarWars Planet model object"""
 
     name = mongoengine.StringField(required=True)
