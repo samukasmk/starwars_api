@@ -8,7 +8,7 @@ from tests.datasets.planets import sample_planets_api_requests
 
 def test_starwars_planet_list_empty(app, client):
     # check empty state
-    assert len(Planet.objects()) == 0
+    assert Planet.objects().count() == 0
 
     # check empty response
     response = client.get("/api/starwars/planet/")
@@ -19,7 +19,7 @@ def test_starwars_planet_list_empty(app, client):
 @pytest.mark.freeze_time("2023-05-05")
 def test_starwars_planet_list_many(client, mock_planet_models):
     # check creation
-    assert len(Planet.objects()) == 6
+    assert Planet.objects().count() == 6
 
     # check http response
     response = client.get("/api/starwars/planet/")

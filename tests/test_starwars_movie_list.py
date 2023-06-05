@@ -8,7 +8,7 @@ from tests.datasets.movies import sample_movies_api_requests
 
 def test_starwars_movie_list_empty(app, client):
     # check empty state
-    assert len(Movie.objects()) == 0
+    assert Movie.objects().count() == 0
 
     # check empty response
     response = client.get("/api/starwars/movie/")
@@ -19,7 +19,7 @@ def test_starwars_movie_list_empty(app, client):
 @pytest.mark.freeze_time("2023-05-05")
 def test_starwars_movie_list_many(client, mock_planet_models, planets_objects_ids, mock_movie_models):
     # check creation
-    assert len(Movie.objects()) == 6
+    assert Movie.objects().count() == 6
 
     # check http response
     response = client.get("/api/starwars/movie/")

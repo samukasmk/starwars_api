@@ -9,7 +9,7 @@ from tests.datasets.movies import sample_movies_api_requests
 @pytest.mark.freeze_time("2023-05-05")
 def test_starwars_movie_list_planets_details(client, mock_planet_models, mock_movie_models, planets_objects_ids):
     # check creation
-    assert len(Movie.objects()) == 6
+    assert Movie.objects().count() == 6
 
     # check http response
     response = client.get("/api/starwars/movie/?movies_details=true")
