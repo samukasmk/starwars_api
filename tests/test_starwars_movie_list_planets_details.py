@@ -3,7 +3,6 @@ from datetime import datetime
 import pytest
 
 from starwars_api.models.starwars.movie import Movie
-from starwars_api.models.starwars.movie import Movie
 from tests.datasets.movies import sample_movies_api_requests
 
 
@@ -25,8 +24,8 @@ def test_starwars_movie_list_planets_details(client, mock_planet_models, mock_mo
         assert json_resource.pop("created_at", None) == datetime.now().isoformat()
         assert json_resource.pop("updated_at", None) == datetime.now().isoformat()
         # check movies array list existence
-        assert all(json_resource['planets'])
+        assert all(json_resource["planets"])
         # check movies details id existence
-        assert all([movie_detailed['id'] for movie_detailed in json_resource.pop('planets_details', [])])
+        assert all([movie_detailed["id"] for movie_detailed in json_resource.pop("planets_details", [])])
         # check field associations
         assert json_resource == sample_movies_api_requests(planets_objects_ids)[idx]

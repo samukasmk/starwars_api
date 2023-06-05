@@ -27,10 +27,10 @@ def mock_planet_models(app):
 def existing_planet_ids(mock_planet_models):
     return [str(planet.id) for planet in mock_planet_models]
 
+
 @pytest.fixture(scope="function")
 def planets_objects_ids(existing_planet_ids):
     return [existing_planet_ids[0:i] for i in range(1, len(existing_planet_ids) + 1)]
-
 
 
 @pytest.fixture(scope="function")
@@ -55,6 +55,7 @@ def mock_movie_models(app, mock_planet_models, planets_objects_ids):
 @pytest.fixture(scope="function")
 def existing_movies_ids(mock_movie_models):
     return [str(movie.id) for movie in mock_movie_models]
+
 
 @pytest.fixture(scope="function")
 def movies_objects_ids(existing_movies_ids):

@@ -124,7 +124,7 @@ class MongoDocumentsResource(Resource):
         """Serialize found mongo document to json response"""
         try:
             # get first object from list
-            if many is False:
+            if many is False and isinstance(mongo_documents, list):
                 mongo_documents = mongo_documents[0]
             return self.serializer_class(many=many).dump(mongo_documents)
         except Exception as exc:
