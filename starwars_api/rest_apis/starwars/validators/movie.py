@@ -48,7 +48,7 @@ def movie_fields(require_all_fields: bool = True) -> Model:
 movie_parameters = reqparse.RequestParser()
 movie_parameters.add_argument(
     "planets_details",
-    choices=("false", "true"),
+    choices=("true", "false"),
     default="",
     help="Shows detailed information about related planets in field (planets_details).",
 )
