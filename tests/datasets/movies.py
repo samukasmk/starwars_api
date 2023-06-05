@@ -15,7 +15,7 @@ def sample_movies_api_requests(planets_objects_ids):
             "director": "George Lucas",
             "producer": "Rick McCallum",
             "release_date": "1999-05-19",
-            "planets": [planets_objects_ids[0]],
+            "planets": planets_objects_ids[0],
         },
         {
             "title": "Attack of the Clones",
@@ -31,7 +31,7 @@ def sample_movies_api_requests(planets_objects_ids):
             "director": "George Lucas",
             "producer": "Rick McCallum",
             "release_date": "2002-05-16",
-            "planets": [planets_objects_ids[idx] for idx in range(0, 2)],
+            "planets": planets_objects_ids[1],
         },
         {
             "title": "Revenge of the Sith",
@@ -47,7 +47,7 @@ def sample_movies_api_requests(planets_objects_ids):
             "director": "George Lucas",
             "producer": "Rick McCallum",
             "release_date": "2005-05-19",
-            "planets": [planets_objects_ids[idx] for idx in range(0, 3)],
+            "planets": planets_objects_ids[2],
         },
         {
             "title": "A New Hope",
@@ -64,7 +64,7 @@ def sample_movies_api_requests(planets_objects_ids):
             "director": "George Lucas",
             "producer": "Gary Kurtz, Rick McCallum",
             "release_date": "1977-05-25",
-            "planets": [planets_objects_ids[idx] for idx in range(0, 4)],
+            "planets": planets_objects_ids[3],
         },
         {
             "title": "The Empire Strikes Back",
@@ -80,7 +80,7 @@ def sample_movies_api_requests(planets_objects_ids):
             "director": "Irvin Kershner",
             "producer": "Gary Kurtz, Rick McCallum",
             "release_date": "1980-05-17",
-            "planets": [planets_objects_ids[idx] for idx in range(0, 5)],
+            "planets": planets_objects_ids[4],
         },
         {
             "title": "Return of the Jedi",
@@ -96,6 +96,6 @@ def sample_movies_api_requests(planets_objects_ids):
             "director": "Richard Marquand",
             "producer": "Howard G. Kazanjian, George Lucas, Rick McCallum",
             "release_date": "1983-05-25",
-            "planets": [planets_objects_ids[idx] for idx in range(0, 6)],
+            "planets": planets_objects_ids[5],
         },
     ]

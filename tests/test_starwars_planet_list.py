@@ -1,5 +1,7 @@
-import pytest
 from datetime import datetime
+
+import pytest
+
 from starwars_api.models.starwars.planet import Planet
 from tests.datasets.planets import sample_planets_api_requests
 
