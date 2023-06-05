@@ -13,3 +13,6 @@ class Movie(mongoengine.Document):
     producer = mongoengine.StringField(required=True)
     release_date = mongoengine.DateField(required=True)
     planets = mongoengine.ListField(mongoengine.ReferenceField(Planet, reverse_delete_rule=mongoengine.CASCADE))
+
+    created_at = mongoengine.DateTimeField(required=True)
+    updated_at = mongoengine.DateTimeField(required=True)

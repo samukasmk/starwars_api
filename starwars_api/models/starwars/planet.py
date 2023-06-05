@@ -13,3 +13,6 @@ class Planet(mongoengine.Document):
     terrain = mongoengine.StringField(required=True)
     surface_water = mongoengine.IntField(required=True)
     population = mongoengine.IntField(required=True)
+
+    created_at = mongoengine.DateTimeField(required=True)
+    updated_at = mongoengine.DateTimeField(required=True)

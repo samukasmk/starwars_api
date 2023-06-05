@@ -15,31 +15,6 @@ class MongoDocumentsResource(Resource):
     aggregations: list[object] = []
 
     ###
-    ### Known exceptions to raise on operation methods
-    ###
-    def abort_on_not_found(self) -> HTTPException:
-        return abort(code=404, message=f"{self.model_class.__name__} resource not found.")
-
-    def abort_on_unprocessable_entity(self) -> HTTPException:
-        return abort(code=422, message="Unprocessable resource, please check your payload field definitions.")
-
-    def abort_on_error(self, action_name: str) -> HTTPException:
-        return abort(code=500, message=f"Error on {action_name} {self.model_class.__name__} resource.")
-
-    def abort_on_validation_error(self, errors: dict | list) -> HTTPException:
-        return abort(code=400, message="Input payload validation failed", errors=errors)
-
-    ###
-    ### Generic mongo documents management
-    ###
-    def get_documents(self, **filters) -> list[Document | dict]:
-        """Get mongo documents iterating response generators for a list"""
-        documents = self.model_class.objects(**filters)
-        if self.aggregations:
-            documents = documents.aggregate(self.aggregations)
-        return list(documents)
-
-    ###
     ### Basic REST operations
     ###
     def list_all_documents(self) -> list[Document]:
@@ -57,7 +32,6 @@ class MongoDocumentsResource(Resource):
             raise self.abort_on_error("retrieve")
         if not mongo_document:
             raise self.abort_on_not_found()
-
         return mongo_document
 
     def create_new_document(self, mongo_document) -> None:
@@ -100,6 +74,19 @@ class MongoDocumentsResource(Resource):
         except Exception:
             raise self.abort_on_error("delete")
 
+    ###
+    ### Generic mongo documents management
+    ###
+    def get_documents(self, **filters) -> list[Document | dict]:
+        """Get mongo documents iterating response generators for a list"""
+        documents = self.model_class.objects(**filters)
+        if self.aggregations:
+            documents = documents.aggregate(self.aggregations)
+        return list(documents)
+
+    ###
+    ### Serialization operations
+    ###
     def serialize_documents_to_json(self, mongo_documents, many=False) -> dict[Any, Any]:
         """Serialize found mongo document to json response"""
         try:
@@ -122,6 +109,21 @@ class MongoDocumentsResource(Resource):
             raise
         except Exception:
             raise self.abort_on_error("deserialize json payload")
+
+    ###
+    ### Known exceptions to raise on operation methods
+    ###
+    def abort_on_not_found(self) -> HTTPException:
+        return abort(code=404, message=f"{self.model_class.__name__} resource not found.")
+
+    def abort_on_unprocessable_entity(self) -> HTTPException:
+        return abort(code=422, message="Unprocessable resource, please check your payload field definitions.")
+
+    def abort_on_error(self, action_name: str) -> HTTPException:
+        return abort(code=500, message=f"Error on {action_name} {self.model_class.__name__} resource.")
+
+    def abort_on_validation_error(self, errors: dict | list) -> HTTPException:
+        return abort(code=400, message="Input payload validation failed", errors=errors)
 
 
 class ListCreateAPIResource(MongoDocumentsResource):
