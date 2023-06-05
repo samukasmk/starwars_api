@@ -1,12 +1,18 @@
+from collections import namedtuple
 from typing import Any
 
+from bson.objectid import ObjectId
 from flask_restx import Resource, abort
 from marshmallow_mongoengine import ModelSchema as ModelSerializer
 from mongoengine import Document
 from mongoengine.errors import InvalidQueryError, ValidationError
+from mongoengine.queryset.queryset import QuerySet
+from pymongo.command_cursor import CommandCursor
 from werkzeug.exceptions import BadRequest, HTTPException
 
 from starwars_api.extensions.openapi import api
+
+RelatedObjectId = namedtuple("ObjectId", "pk")
 
 
 class MongoDocumentsResource(Resource):
@@ -85,7 +91,31 @@ class MongoDocumentsResource(Resource):
         documents = self.model_class.objects(**filters)
         if self.aggregations:
             documents = documents.aggregate(self.aggregations)
-        return list(documents)
+        return documents
+
+    ###
+    ### Normalization operations
+    ###
+    def normalize_aggregated_results(self, mongo_result: CommandCursor) -> list[dict]:
+        """Convert generator objects from mongodb normalizing to a list"""
+        return [self.normalize_document_fields(document) for document in mongo_result]
+
+    def normalize_document_fields(self, aggregated_document: dict):
+        """Fix wrong association ObjectId without pk attribute in aggregated results"""
+        for field_key, field_value in aggregated_document.items():
+            if isinstance(field_value, list):
+                normalized_objects = [self.fix_object_id_missing_pk_attribute(sub_value) for sub_value in field_value]
+            else:
+                normalized_objects = self.fix_object_id_missing_pk_attribute(field_value)
+            aggregated_document[field_key] = normalized_objects
+        return aggregated_document
+
+    def fix_object_id_missing_pk_attribute(self, field_value):
+        """Fix wrong association ObjectId without pk attribute in aggregated results"""
+        if isinstance(field_value, ObjectId) and not hasattr(field_value, "pk"):
+            return RelatedObjectId(pk=str(field_value))
+        else:
+            return field_value
 
     ###
     ### Serialization operations
@@ -94,7 +124,7 @@ class MongoDocumentsResource(Resource):
         """Serialize found mongo document to json response"""
         try:
             # get first object from list
-            if many is False and isinstance(mongo_documents, list):
+            if many is False:
                 mongo_documents = mongo_documents[0]
             return self.serializer_class(many=many).dump(mongo_documents)
         except Exception as exc:
@@ -102,7 +132,6 @@ class MongoDocumentsResource(Resource):
 
     def deserialize_json_payload_to_document(self, api_payload) -> Document:
         """Deserialize json payload to a new mongo document"""
-
         try:
             serializer = self.serializer_class()
             errors = serializer.validate(api_payload)
@@ -136,6 +165,8 @@ class ListCreateAPIResource(MongoDocumentsResource):
     def list(self) -> dict[Any, Any]:  # TODO: fix typing to list[dict[Any, Any]]
         """List all mongo documents"""
         mongo_documents = self.list_all_documents()
+        if self.aggregations:
+            mongo_documents = self.normalize_aggregated_results(mongo_documents)
         return self.serialize_documents_to_json(mongo_documents, many=True)
 
     def create(self) -> dict[Any, Any]:
@@ -150,8 +181,10 @@ class DetailAPIResource(MongoDocumentsResource):
 
     def retrieve(self, object_id: str) -> dict[Any, Any]:
         """Retrieve a mongo document"""
-        mongo_document = self.retrive_document_by_object_id(object_id)
-        return self.serialize_documents_to_json(mongo_document)
+        mongo_documents = self.retrive_document_by_object_id(object_id)
+        if self.aggregations:
+            mongo_documents = self.normalize_aggregated_results(mongo_documents)
+        return self.serialize_documents_to_json(mongo_documents)
 
     def update(self, object_id: str) -> dict[Any, Any]:
         """Update a mongo_document"""
