@@ -11,32 +11,23 @@ def app() -> Flask:
     return create_app(FORCE_ENV_FOR_DYNACONF="testing")
 
 
-def create_pymongo_client(app):
-    return MongoClient(app.config['MONGODB_PYTEST'])
+def build_mongodb_testing_env(app):
+    with MongoClient(app.config['MONGODB_PYTEST']) as client:
+        # remove existing database
+        if 'testing_starwars' in client.list_database_names():
+            client.drop_database('testing_starwars')
 
+        # create app user
+        users_id = [user['_id'] for user in client.testing_starwars.command('usersInfo')['users']]
+        if 'testing_starwars.testing_starwars' not in users_id:
+            client.testing_starwars.command('createUser', 'testing_starwars', pwd='testing_starwars',
+                                            roles=[{'role': 'readWrite', 'db': 'testing_starwars'}])
 
-def cleanup_mongodb_testing_env(app):
-    client = create_pymongo_client(app)
-    if 'testing_starwars' in client.list_database_names():
-        client.drop_database('testing_starwars')
-    try:
-        client.testing_starwars.command('dropUser', 'testing_starwars')
-    except:
-        ...
-
-
-def create_mongodb_testing_env(app):
-    client = create_pymongo_client(app)
-    # create database by first insert
-    client.testing_starwars.auto_created.insert_one({"auto_created": True})
-    # create app user
-    client.testing_starwars.command('createUser', 'testing_starwars', pwd='testing_starwars',
-                                    roles=[{'role': 'readWrite', 'db': 'testing_starwars'}])
+        # create database by first insert
+        client.testing_starwars.auto_created.insert_one({"auto_created": True})
 
 
 @pytest.fixture(autouse=True)
 def run_around_tests(app):
-    cleanup_mongodb_testing_env(app)
-    create_mongodb_testing_env(app)
+    build_mongodb_testing_env(app)
     yield
-    cleanup_mongodb_testing_env(app)

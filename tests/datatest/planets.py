@@ -2,7 +2,6 @@ def sample_planets():
     """Sample data of starwars planets with fake associations"""
     return [
         {
-            "id": 1,
             "name": "Tatooine",
             "rotation_period": "23",
             "orbital_period": "304",
