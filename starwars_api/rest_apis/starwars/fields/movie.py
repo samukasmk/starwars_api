@@ -34,7 +34,11 @@ def movie_fields(all_fields_is_required: bool = True) -> Model:
             "director": fields.String(required=all_fields_is_required, default="George Lucas"),
             "producer": fields.String(required=all_fields_is_required, default="Rick McCallum"),
             "release_date": fields.Date(required=all_fields_is_required, default="1999-05-19"),
-            "planets": fields.List(fields.Integer(min=1), default=[1, 2, 3]),
+            "planets": fields.List(
+                fields.String(),
+                required=False,
+                example=["PlanetIdFKRefToMovie0001", "PlanetIdFKRefToMovie0002", "PlanetIdFKRefToMovie0003"],
+            ),
         },
     )
 

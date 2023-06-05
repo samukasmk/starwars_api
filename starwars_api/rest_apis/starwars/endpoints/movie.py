@@ -1,4 +1,5 @@
 from typing import Any
+
 from starwars_api.extensions.openapi import api
 from starwars_api.models.starwars.movie import Movie
 from starwars_api.rest_apis.starwars.endpoints.base import DetailAPIResource, ListCreateAPIResource
