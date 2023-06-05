@@ -1,4 +1,4 @@
-from marshmallow_mongoengine import ModelSchema, fields
+from marshmallow_mongoengine import fields
 
 from starwars_api.models.starwars.movie import Movie
 from starwars_api.models.starwars.planet import Planet

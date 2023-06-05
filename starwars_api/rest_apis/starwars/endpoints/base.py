@@ -85,11 +85,14 @@ class MongoDocumentsResource(Resource):
         documents = self.model_class.objects(**filters)
         if self.aggregations:
             documents = documents.aggregate(self.aggregations)
-        return list(documents)
+        return documents
 
     ###
     ### Serialization operations
     ###
+    def normalize_document_to_serialize(self, mongo_document):
+        return mongo_document
+
     def serialize_documents_to_json(self, mongo_documents, many=False) -> dict[Any, Any]:
         """Serialize found mongo document to json response"""
         try:
@@ -135,7 +138,7 @@ class ListCreateAPIResource(MongoDocumentsResource):
 
     def list(self) -> dict[Any, Any]:  # TODO: fix typing to list[dict[Any, Any]]
         """List all mongo documents"""
-        mongo_documents = self.list_all_documents()
+        mongo_documents = [self.normalize_document_to_serialize(document) for document in self.list_all_documents()]
         return self.serialize_documents_to_json(mongo_documents, many=True)
 
     def create(self) -> dict[Any, Any]:
@@ -150,7 +153,9 @@ class DetailAPIResource(MongoDocumentsResource):
 
     def retrieve(self, object_id: str) -> dict[Any, Any]:
         """Retrieve a mongo document"""
-        mongo_document = self.retrive_document_by_object_id(object_id)
+        mongo_document = self.normalize_document_to_serialize(
+            # get an object by object_id
+            self.retrive_document_by_object_id(object_id))
         return self.serialize_documents_to_json(mongo_document)
 
     def update(self, object_id: str) -> dict[Any, Any]:
