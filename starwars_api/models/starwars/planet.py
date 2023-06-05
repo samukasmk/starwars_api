@@ -1,7 +1,9 @@
 import mongoengine
 
+from starwars_api.models.starwars.base import BaseDocument
 
-class Planet(mongoengine.Document):
+
+class Planet(BaseDocument):
     """StarWars Planet model object"""
 
     name = mongoengine.StringField(required=True)
@@ -13,6 +15,3 @@ class Planet(mongoengine.Document):
     terrain = mongoengine.StringField(required=True)
     surface_water = mongoengine.IntField(required=True)
     population = mongoengine.IntField(required=True)
-
-    created_at = mongoengine.DateTimeField(required=True)
-    updated_at = mongoengine.DateTimeField(required=True)

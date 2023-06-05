@@ -38,6 +38,9 @@ class MongoDocumentsResource(Resource):
         """ "Create document in mongo saving new instance"""
         try:
             mongo_document.save()
+        except ValidationError as exc:
+            exc_message = exc.message.replace("None", "null")
+            raise self.abort_on_validation_error({exc.field_name: exc_message})
         except Exception:
             raise self.abort_on_error("create")
 
@@ -56,7 +59,7 @@ class MongoDocumentsResource(Resource):
         except InvalidQueryError:
             raise self.abort_on_unprocessable_entity()
         except ValidationError as exc:
-            exc_message = exc.message.replace('"None"', "null")
+            exc_message = exc.message.replace("None", "null")
             raise self.abort_on_validation_error({exc.field_name: exc_message})
         except Exception:
             raise self.abort_on_error("update")
@@ -90,7 +93,8 @@ class MongoDocumentsResource(Resource):
     def serialize_documents_to_json(self, mongo_documents, many=False) -> dict[Any, Any]:
         """Serialize found mongo document to json response"""
         try:
-            if many is False:
+            # get first object from list
+            if many is False and isinstance(mongo_documents, list):
                 mongo_documents = mongo_documents[0]
             return self.serializer_class(many=many).dump(mongo_documents)
         except Exception as exc:

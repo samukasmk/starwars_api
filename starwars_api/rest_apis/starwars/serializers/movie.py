@@ -1,11 +1,7 @@
-from marshmallow_mongoengine import ModelSchema as ModelSerializer
-from marshmallow_mongoengine import fields
-
 from starwars_api.models.starwars.movie import Movie
+from starwars_api.rest_apis.starwars.serializers.base import BaseSerializer
 
 
-class MovieSerializer(ModelSerializer):
-    id = fields.Str(dump_only=True)
-
+class MovieSerializer(BaseSerializer):
     class Meta:
         model = Movie
