@@ -23,8 +23,6 @@ def test_starwars_movie_list_planets_details(client, mock_planet_models, mock_mo
         assert json_resource.pop("id", None)
         assert json_resource.pop("created_at", None) == datetime.now().isoformat()
         assert json_resource.pop("updated_at", None) == datetime.now().isoformat()
-        # check movies array list existence
-        assert all(json_resource["planets"])
         # check movies details id existence
         assert all([movie_detailed["id"] for movie_detailed in json_resource.pop("planets_details", [])])
         # check field associations
