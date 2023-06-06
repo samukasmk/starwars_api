@@ -27,7 +27,9 @@ def test_starwars_movie_retrieve_many(client, mock_planet_models, planets_object
     # check creation
     assert Movie.objects().count() == 6
 
-    for movie_model in mock_movie_models:
+    requested_movies_data = sample_movies_api_requests(planets_objects_ids)
+
+    for idx, movie_model in enumerate(mock_movie_models):
         # check http response
         response = client.get(f"/api/starwars/movie/{movie_model['id']}/")
         assert response.status_code == 200
@@ -37,4 +39,5 @@ def test_starwars_movie_retrieve_many(client, mock_planet_models, planets_object
         assert response_json.pop("id", None)
         assert response_json.pop("created_at", None) == datetime.now().isoformat()
         assert response_json.pop("updated_at", None) == datetime.now().isoformat()
-        assert all(response_json.pop("planets", None))
+        # check static values
+        assert response_json == requested_movies_data[idx]

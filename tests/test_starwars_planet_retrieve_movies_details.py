@@ -15,9 +15,9 @@ def test_starwars_planet_retrieve_movies_details_not_found(app, client):
     assert response.status_code == 404
     assert response.json == {
         "message": "Planet resource not found. You have requested this URI "
-                   "[/api/starwars/planet/64544700cea03ff1eedb3735/] but did you mean "
-                   "/api/starwars/planet/<regex('[a-fA-F0-9]{24}'):planet_id>/ or "
-                   "/api/starwars/planet/ ?"
+        "[/api/starwars/planet/64544700cea03ff1eedb3735/] but did you mean "
+        "/api/starwars/planet/<regex('[a-fA-F0-9]{24}'):planet_id>/ or "
+        "/api/starwars/planet/ ?"
     }
 
 
@@ -37,4 +37,4 @@ def test_starwars_planet_retrieve_movies_details(client, mock_movie_models, movi
         assert response_json.pop("created_at", None) == datetime.now().isoformat()
         assert response_json.pop("updated_at", None) == datetime.now().isoformat()
         assert all(response_json.pop("movies", None))
-        assert all([movie['id'] for movie in response_json.pop("movies_details", None)])
+        assert all([movie["id"] for movie in response_json.pop("movies_details", None)])

@@ -12,9 +12,9 @@ def test_starwars_movie_delete_not_found(app, client):
     assert response.status_code == 404
     assert response.json == {
         "message": "Movie resource not found. You have requested this URI "
-                   "[/api/starwars/movie/64544700cea03ff1eedb3735/] but did you mean "
-                   "/api/starwars/movie/<regex('[a-fA-F0-9]{24}'):movie_id>/ or "
-                   "/api/starwars/movie/ ?"
+        "[/api/starwars/movie/64544700cea03ff1eedb3735/] but did you mean "
+        "/api/starwars/movie/<regex('[a-fA-F0-9]{24}'):movie_id>/ or "
+        "/api/starwars/movie/ ?"
     }
 
 

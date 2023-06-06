@@ -12,9 +12,9 @@ def test_starwars_planet_delete_not_found(app, client):
     assert response.status_code == 404
     assert response.json == {
         "message": "Planet resource not found. You have requested this URI "
-                   "[/api/starwars/planet/64544700cea03ff1eedb3735/] but did you mean "
-                   "/api/starwars/planet/<regex('[a-fA-F0-9]{24}'):planet_id>/ or "
-                   "/api/starwars/planet/ ?"
+        "[/api/starwars/planet/64544700cea03ff1eedb3735/] but did you mean "
+        "/api/starwars/planet/<regex('[a-fA-F0-9]{24}'):planet_id>/ or "
+        "/api/starwars/planet/ ?"
     }
 
 

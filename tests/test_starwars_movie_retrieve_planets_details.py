@@ -4,6 +4,7 @@ from datetime import datetime
 import pytest
 
 from starwars_api.models.starwars.movie import Movie
+from tests.datasets.movies import sample_movies_api_requests
 
 
 def test_starwars_movie_retrieve_planets_details_not_found(app, client):
@@ -15,9 +16,9 @@ def test_starwars_movie_retrieve_planets_details_not_found(app, client):
     assert response.status_code == 404
     assert response.json == {
         "message": "Movie resource not found. You have requested this URI "
-                   "[/api/starwars/movie/64544700cea03ff1eedb3735/] but did you mean "
-                   "/api/starwars/movie/<regex('[a-fA-F0-9]{24}'):movie_id>/ or "
-                   "/api/starwars/movie/ ?"
+        "[/api/starwars/movie/64544700cea03ff1eedb3735/] but did you mean "
+        "/api/starwars/movie/<regex('[a-fA-F0-9]{24}'):movie_id>/ or "
+        "/api/starwars/movie/ ?"
     }
 
 
@@ -26,7 +27,9 @@ def test_starwars_movie_retrieve_planets_details(client, mock_planet_models, pla
     # check creation
     assert Movie.objects().count() == 6
 
-    for movie_model in mock_movie_models:
+    requested_movies_data = sample_movies_api_requests(planets_objects_ids)
+
+    for idx, movie_model in enumerate(mock_movie_models):
         # check http response
         response = client.get(f"/api/starwars/movie/{movie_model['id']}/?planets_details=true")
         assert response.status_code == 200
@@ -36,5 +39,6 @@ def test_starwars_movie_retrieve_planets_details(client, mock_planet_models, pla
         assert response_json.pop("id", None)
         assert response_json.pop("created_at", None) == datetime.now().isoformat()
         assert response_json.pop("updated_at", None) == datetime.now().isoformat()
-        assert all(response_json.pop("planets", None))
-        assert all([planet['id'] for planet in response_json.pop("planets_details", None)])
+        assert all([planet["id"] for planet in response_json.pop("planets_details", None)])
+        # check static values
+        assert response_json == requested_movies_data[idx]
