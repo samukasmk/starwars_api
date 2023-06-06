@@ -44,7 +44,7 @@ services:
     networks:
       - starwars_api
 
-  unit_tests:
+  unit-tests:
     image: starwars_api_development
     # scale 0 disables this service to run on `docker-compose up` command to run the
     # unit-tests please execute manually the command: `docker-compose run --rm unit-tests`
@@ -53,6 +53,7 @@ services:
       context: .
       args:
         INSTALL_LIBS: dev
+    command: make test
     environment:
       - FLASK_ENV=testing
     networks:
