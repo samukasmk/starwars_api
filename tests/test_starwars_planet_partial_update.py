@@ -8,7 +8,7 @@ from tests.datasets.planets import sample_planets_api_requests
 
 
 @pytest.mark.freeze_time("2023-05-05")
-def test_starwars_planet_update(client, mock_movie_models, movies_objects_ids, mock_planet_models):
+def test_starwars_planet_partial_update(client, mock_movie_models, movies_objects_ids, mock_planet_models):
     # check creation
     assert Planet.objects().count() == 6
 
@@ -18,7 +18,8 @@ def test_starwars_planet_update(client, mock_movie_models, movies_objects_ids, m
         request_payload = requested_planets_data[idx]
         request_payload['diameter'] = 10000000
         # check http response
-        response = client.put(f"/api/starwars/planet/{planet_model['id']}/", json=request_payload)
+        response = client.patch(f"/api/starwars/planet/{planet_model['id']}/",
+                                json={'diameter': request_payload['diameter']})
         assert response.status_code == 200
         # check results
         response_json = copy.deepcopy(response.json)
