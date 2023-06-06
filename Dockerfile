@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Install ubuntu packages
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y make gcc python-dev && \
+    apt-get install --no-install-recommends -y make gcc python-dev git && \
     apt clean && \
     apt autoclean && \
     rm -rf /var/lib/apt/lists/*
