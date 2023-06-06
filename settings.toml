@@ -34,7 +34,9 @@ DEBUG = true
 
 
 [testing]
-MONGOENGINE_HOST = 'mock'
+TESTING = true
+MONGODB_PYTEST = "mongodb://root:testing_starwars@mongo_tests:27018/"
+MONGODB_HOST = "mongodb://testing_starwars:testing_starwars@mongo_tests:27018/testing_starwars"
 
 
 

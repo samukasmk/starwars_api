@@ -1,8 +1,7 @@
-def sample_movies():
+def sample_movies_api_requests(planets_objects_ids):
     """Sample data of starwars movies with fake associations"""
     return [
         {
-            "id": 1,
             "title": "The Phantom Menace",
             "opening_crawl": (
                 "Turmoil has engulfed the\r\nGalactic Republic. The taxation\r\nof trade routes to outlying star\r\n"
@@ -16,12 +15,9 @@ def sample_movies():
             "director": "George Lucas",
             "producer": "Rick McCallum",
             "release_date": "1999-05-19",
-            "planets": [6],  # fake associations, just for test
-            "created": "2014-12-19T16:52:55.740000Z",
-            "edited": "2014-12-20T10:54:07.216000Z",
+            "planets": planets_objects_ids[0],
         },
         {
-            "id": 2,
             "title": "Attack of the Clones",
             "opening_crawl": (
                 "There is unrest in the Galactic\r\nSenate. Several thousand solar\r\nsystems have declared their\r\n"
@@ -35,15 +31,9 @@ def sample_movies():
             "director": "George Lucas",
             "producer": "Rick McCallum",
             "release_date": "2002-05-16",
-            "planets": [  # fake associations, just for test
-                5,
-                6,
-            ],
-            "created": "2014-12-20T10:57:57.886000Z",
-            "edited": "2014-12-20T20:18:48.516000Z",
+            "planets": planets_objects_ids[1],
         },
         {
-            "id": 3,
             "title": "Revenge of the Sith",
             "opening_crawl": (
                 "War! The Republic is crumbling\r\nunder attacks by the ruthless\r\nSith Lord, Count Dooku.\r\n"
@@ -57,16 +47,9 @@ def sample_movies():
             "director": "George Lucas",
             "producer": "Rick McCallum",
             "release_date": "2005-05-19",
-            "planets": [  # fake associations, just for test
-                4,
-                5,
-                6,
-            ],
-            "created": "2014-12-20T18:49:38.403000Z",
-            "edited": "2014-12-20T20:47:52.073000Z",
+            "planets": planets_objects_ids[2],
         },
         {
-            "id": 4,
             "title": "A New Hope",
             "opening_crawl": (
                 "It is a period of civil war.\r\nRebel spaceships, striking\r\nfrom a hidden base, have won\r\n"
@@ -81,17 +64,9 @@ def sample_movies():
             "director": "George Lucas",
             "producer": "Gary Kurtz, Rick McCallum",
             "release_date": "1977-05-25",
-            "planets": [  # fake associations, just for test
-                3,
-                4,
-                5,
-                6,
-            ],
-            "created": "2014-12-10T14:23:31.880000Z",
-            "edited": "2014-12-20T19:49:45.256000Z",
+            "planets": planets_objects_ids[3],
         },
         {
-            "id": 5,
             "title": "The Empire Strikes Back",
             "opening_crawl": (
                 "It is a dark time for the\r\nRebellion. Although the Death\r\nStar has been destroyed,\r\n"
@@ -105,18 +80,9 @@ def sample_movies():
             "director": "Irvin Kershner",
             "producer": "Gary Kurtz, Rick McCallum",
             "release_date": "1980-05-17",
-            "planets": [  # fake associations, just for test
-                2,
-                3,
-                4,
-                5,
-                6,
-            ],
-            "created": "2014-12-12T11:26:24.656000Z",
-            "edited": "2014-12-15T13:07:53.386000Z",
+            "planets": planets_objects_ids[4],
         },
         {
-            "id": 6,
             "title": "Return of the Jedi",
             "opening_crawl": (
                 "Luke Skywalker has returned to\r\nhis home planet of Tatooine in\r\nan attempt to rescue his\r\n"
@@ -130,15 +96,6 @@ def sample_movies():
             "director": "Richard Marquand",
             "producer": "Howard G. Kazanjian, George Lucas, Rick McCallum",
             "release_date": "1983-05-25",
-            "planets": [  # fake associations, just for test
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-            ],
-            "created": "2014-12-18T10:39:33.255000Z",
-            "edited": "2014-12-20T09:48:37.462000Z",
+            "planets": planets_objects_ids[5],
         },
     ]

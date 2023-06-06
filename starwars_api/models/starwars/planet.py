@@ -14,4 +14,4 @@ class Planet(BaseDocument):
     gravity = mongoengine.StringField(required=True)
     terrain = mongoengine.StringField(required=True)
     surface_water = mongoengine.IntField(required=True)
-    population = mongoengine.IntField(required=True)
+    population = mongoengine.StringField(required=True)

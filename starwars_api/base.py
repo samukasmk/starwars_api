@@ -6,11 +6,9 @@ def load_settings_file(app: Flask, **extra_config) -> None:
     """
     Load Dynaconf settings (from settings.toml) merging with env variables (FLASK_*)
     """
-    FlaskDynaconf(app, envvar_prefix="FLASK")
+    FlaskDynaconf(app, envvar_prefix="FLASK", **extra_config)
     # Initialize project extensions defined in settings.toml
     app.config.load_extensions("EXTENSIONS")  # NOQA[attr-defined]
-    # Overwrite Dynaconf settings from extra config on app creation
-    app.config.update(extra_config)
 
 
 def create_app(**extra_config) -> Flask:
