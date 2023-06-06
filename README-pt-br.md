@@ -182,9 +182,17 @@ Visite o swagger e descubra por conta própria
 
 
 ### Executando testes unitários de forma local
+
+> A execução dos testes unitários depende que o container `mongo_tests` esteja rodando não se esqueça de executa-lo antes com o comando **docker-compose up -d mongo_tests**
+
 ```
+docker-compose up -d mongo_tests
 make test
 ```
+
+**Exemplo:**
+
+![.docs/assets/unit-tests.gif](.docs/assets/unit-tests.gif)
 
 ### Executando testes unitários pelo docker
 > Observação: ainda falta ajustar erro de configuração na conexão entre o container de testes do flask e o mongo de testes
