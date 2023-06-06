@@ -23,9 +23,6 @@ git clone https://github.com/samukasmk/starwars_api.git
 cd starwars_api
 
 docker-compose up --build
-
-http://127.0.0.1:5000
-command: make test
 ```
 
 ## Example of running the application with docker-compose
@@ -48,14 +45,13 @@ Endpoint that manages the basic data of the planets that appear in the Star Wars
 
  **Method** | **Endpoint**                              | **Description**                                                                                             
 ------------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------
+ **POST**   | /api/starwars/planet/                     | Create a planet resource
  **GET**    | /api/starwars/planet/                     | List all planet resources
  **GET**    | /api/starwars/planet/?movies_details=true | List all planets resources, with movie related information in the field **”movies_details"**
- **GET**    | /api/starwars/planet/{planet_id}/         | Recover a resource from the planet
- **GET**    | /api/starwars/planet/{planet_id}/         | Retrieve a planet resource, with movie-related information in the **”planets_details"** field
- **POST**   | /api/starwars/planet/                     | Create a planet resource
- **PUT**    | /api/starwars/planet/{planet_id}/         | Upgrade a planet resource
- **PATCH**  | /api/starwars/planet/{planet_id}/         | Partial upgrade of a planet resource
- **DELETE** | /api/starwars/planet/{planet_id}/         | Delete a resource from the planet                                                                         
+ **GET**    | /api/starwars/planet/<planet_id>/         | Recover a resource from the planet
+ **PUT**    | /api/starwars/planet/<planet_id>/         | Upgrade a planet resource
+ **PATCH**  | /api/starwars/planet/<planet_id>/         | Partial upgrade of a planet resource
+ **DELETE** | /api/starwars/planet/<planet_id>/         | Delete a resource from the planet                                                                         
 
 
 ### Changeable fields:
@@ -100,13 +96,13 @@ Endpoint that manages the basic data of `movies` with their respective appearanc
 ### Applied methods:
  **Method** | **Endpoint**                                  | **Description**             
 ------------|-----------------------------------------------|---------------------------------
+ **POST**   | /api/starwars/movie/                          | Create a movie resource         
  **GET**    | /api/starwars/movie/                          | List all movies resources       
  **GET**    | /api/starwars/movie/**?planets_details=true** | List all movies resources       
- **POST**   | /api/starwars/movie/                          | Create a movie resource         
- **PUT**    | /api/starwars/movie/{movie_id}/               | Update a movie resource         
- **PATCH**  | /api/starwars/movie/{movie_id}/               | Partial update a movie resource 
- **GET**    | /api/starwars/movie/{movie_id}/               | Retrieve a movie resource       
- **DELETE** | /api/starwars/movie/{movie_id}/               | Delete a movie resource    
+ **GET**    | /api/starwars/movie/<movie_id>/               | Retrieve a movie resource    
+ **PUT**    | /api/starwars/movie/<movie_id>/               | Update a movie resource         
+ **PATCH**  | /api/starwars/movie/<movie_id>/               | Partial update a movie resource 
+ **DELETE** | /api/starwars/movie/<movie_id>/               | Delete a movie resource    
 
 ### Changeable fields:
 - **title**: `<StringField>`
@@ -167,9 +163,37 @@ Visit swagger and find out for yourself
 
 # Development
 
-## Running unit tests locally
+## Code quality
+
+### Types of tests performed in the project
+
+| **Tests**                                         | **Description**                                                                |
+|---------------------------------------------------|--------------------------------------------------------------------------------|
+| **[pytest](https://docs.pytest.org/)**            | Unit tests for REST APi                                                        |
+| **[mypy](https://mypy.readthedocs.io/)**          | Typing tests and input and output annotations of functions, methods, variables |
+| **[pyflakes](https://github.com/PyCQA/pyflakes)** | Functional syntax tests that look beyond an import                             |
+| **[pylint](https://pylint.readthedocs.io/)**      | Advanced syntax testing with more complex parsing                              |
+| **[pycodestyle](https://pycodestyle.pycqa.org/)** | Compatibility tests with pep8 good practices                                   |
+| **[radon](https://radon.readthedocs.io/)**        | Cyclomatic complexity tests                                                   |
+| **[pylama](https://klen.github.io/pylama/)**      | Aggregator of the tests above, in a unified way                                |
+| **[isort](https://pycqa.github.io/isort/)**       | Import Ordering Tests                                                          |
+| **[bandit](https://bandit.readthedocs.io/)**      | Discovery tests for security vulnerabilities written in source code            |
+
+
+> If you want to disable some test, change the settings in the **pyproject.toml** file
+
+
+### Running unit tests locally
 ```
 make test
+```
+
+### Running unit tests through docker
+> Note: still need to adjust configuration error in the connection between the flask test container and the test mongo
+
+```
+docker-compose up -d mongo_tests
+docker-compose run --rm unit-tests
 ```
 
 ### Formatting python files and imports
@@ -177,15 +201,100 @@ make test
 make fmt
 ```
 
-### Updated requirements files with poetry:
-1.) Add new dependencies in the **pyproject.toml** file
+### Running security checks
+```
+make sec-check
+```
 
-2.) Run poetry through the make command:
+
+
+
+## Agility in development
+
+### Running flask on your local machine
+
+
+#### In production mode
+```
+docker-compose up -d mongo
+make runserver
+```
+
+#### Alternative development modes
+```
+make devserver
+
+make debugserver
+```
+
+### Automating commands with Git Hooks
+
+#### Running unit tests after every commit
+```
+make activate-commit-checks
+```
+
+![.docs/assets/git-commit-hooks.png](.docs/assets/git-commit-hooks.png)
+
+
+#### Formatting commit messages with branch name
+```
+make activate-commit-msg-fmt
+```
+
+![.docs/assets/git-commit-fmt.png](.docs/assets/git-commit-fmt.png)
+
+
+#### Disabling installed automations from githooks
+```
+make deactivate-git-hooks
+```
+
+
+## DevOps
+
+### Add new python library
+
+The dependency management is done through the [python-poetry](https://python-poetry.org/) tool that chooses the subversions, in order to find a middle ground so that all the necessary libraries can coexist and at the same time have a constant evolution, avoiding security vulnerabilities.
+
+To add a new required library, do the following:
+
+1.) Locate it in the repository [https://pypi.org/](https://pypi.org/)
+
+2.) Get the current version
+
+3.) Declare it in the dependencies file **pyproject.toml** as a current version or higher.
+
+Example if it is version 1.0.0 of the xpto library, declare it as:
+```
+xpto = "^1.0.0"
+```
+
+4.) Rebuild the requiments.txt files
+
 ```
 make build-requirements
 ```
 
-### Running security checks
+The above command performs the following operations:
+- Create a separate virtualenv (only for managing poetry)
+- Run poetry install
+- Export requirements.txt files
+
+> If you want this reconstruction to be done in your local virtualenv just run the command: **make build-requirements-local**
+
+5.) Rebuild your local virtualenv
+
+To install the new requirements files you can run:
+
+**In production mode:**
 ```
-make sec-check
+make install
+```
+
+or
+
+**In development mode:**
+```
+make install-dev
 ```

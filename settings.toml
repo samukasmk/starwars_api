@@ -35,8 +35,8 @@ DEBUG = true
 
 [testing]
 TESTING = true
-MONGODB_PYTEST = "mongodb://root:testing_starwars@mongo_tests:27018/"
-MONGODB_HOST = "mongodb://testing_starwars:testing_starwars@mongo_tests:27018/testing_starwars"
+MONGODB_PYTEST = "mongodb://root:testing_starwars@127.0.0.1:27018/"
+MONGODB_HOST = "mongodb://testing_starwars:testing_starwars@127.0.0.1:27018/testing_starwars"
 
 
 
