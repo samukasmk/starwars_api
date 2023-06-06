@@ -1,19 +1,21 @@
 # starwars_api
 
-Esse é um projeto de exemplo de caso de uso das tecnologias: (**Flask Framework**) com banco bancos de dados **no-sql** (**MongoDB**) orientado a *documentos*.
+[./README-pt-br.md](**README: in Portuguese**)
 
-Esse projeto implementa alguns recursos simples para gestão de dados dos filmes da sagas StarWars. E foi inspiridado na API: [https://swapi.dev/](https://swapi.dev/).
+This is an example of use case project for technologies: (**Flask Framework**) with databases **no-sql** (**MongoDB**) oriented to *documents*.
 
-Diferentemente do [https://swapi.dev/](https://swapi.dev/) que foi construido em **Django**, esse projeto visa implementar conceitos e boas práticas de arquitetura mais abrangente, estruturando o **Framework Flask** para um grande projeto, com o sentido de abrir mais de um escopo de dados, não se restringindo apenas a `starwars_api`. 
+This project implements some simple resources for data management of the StarWars saga movies. And it was inspired by the API: [https://swapi.dev/](https://swapi.dev/).
+
+Unlike [https://swapi.dev/](https://swapi.dev/) which was built in **Django**, this project aims to implement more comprehensive architecture concepts and best practices, structuring the **Framework Flask** for a large project, in the sense of opening up more than one scope of data, not just being restricted to `starwars_api`.
 
 
-# Installing
+# installing
 
-A instalação mais indicada é atraves do [Docker](https://docs.docker.com/engine/install/) e [docker-compose](https://docs.docker.com/compose/install/) caso você não possua instalado na sua maquina, providencie a instalação atraves dos links prévios.
+The most recommended installation is through [Docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/) if you don't have it installed on your machine, arrange the installation through the previous links.
 
-## Instalando com o docker-compose
+## Installing with docker-compose
 
-Basta apenas executar os seguintes comandos abaixo:
+Just run the following commands below:
 
 ```sh
 git clone https://github.com/samukasmk/starwars_api.git
@@ -26,35 +28,35 @@ http://127.0.0.1:5000
 command: make test
 ```
 
-## Exemplo de execução da aplicação com o docker-compose
+## Example of running the application with docker-compose
 ![.docs/assets/docker-install.gif](.docs/assets/docker-install.gif)
 
 
-# Utilizando a API Rest
+# Using the Rest API
 
-Após os passoes anteriores tiverem sido executados com sucesso e executando, connect na url de seu computador: [http://127.0.0.1:5000/](http://127.0.0.1:5000/).
+After the previous steps have been successfully performed and running, connect to your computer's url: [http://127.0.0.1:5000/](http://127.0.0.1:5000/).
 
 ![.docs/assets/api-swagger-listing.png]()
 
-Atualmente essa API implementa 2 endpoints:
+Currently this API implements 2 endpoints:
 
-## Planets
+## planets
 
-Endpoint que faz a gestão básicas de dados dos planetas que aparecem nos filmes dos StarWars, como população, diametro, gravidade, periodo da orbita, periodo de rotação. 
+Endpoint that manages the basic data of the planets that appear in the Star Wars movies, such as population, diameter, gravity, orbit period, rotation period.
 
-### Métodos aplicados:
+### Applied methods:
 
-**Método**  | **Endpoint**                              | **Descrição**                                                                             
-------------|-------------------------------------------|-------------------------------------------------------------------------------------------
- **POST**   | /api/starwars/planet/                     | Create a planet resource                                                                  
- **GET**    | /api/starwars/planet/                     | List all planets resources                                                                
- **GET**    | /api/starwars/planet/?movies_details=true | List all planets resources (with relate movie inforations on field **”movies_details"**)   
- **GET**    | /api/starwars/planet/{planet_id}/         | Retrieve a planet resource
- **PUT**    | /api/starwars/planet/{planet_id}/         | Update a planet resource                                                                  
- **PATCH**  | /api/starwars/planet/{planet_id}/         | Partial update a planet resource                                                          
- **DELETE** | /api/starwars/planet/{planet_id}/         | Delete a planet resource                                                                  
+**Method** | **Endpoint** | **Description**
+------------|------------------------------------- ------|----------------------------------------------------- ------------------------------------------------
+**POST** | /api/starwars/planet/ | Create a planet resource
+**GET** | /api/starwars/planet/ | List all planets resources
+**GET** | /api/starwars/planet/?movies_details=true | List all planets resources (with relate movie informations on field **”movies_details"**)
+**GET** | /api/starwars/planet/{planet_id}/ | Retrieve a planet resource
+**PUT** | /api/starwars/planet/{planet_id}/ | Update a planet resource
+**PATCH** | /api/starwars/planet/{planet_id}/ | Partial update a planet resource
+**DELETE** | /api/starwars/planet/{planet_id}/ | Delete a planet resource
 
-### Campos alteraveis:
+### Changeable fields:
 - **name** `<StringField>`
 - **rotation_period** `<IntField>`
 - **orbital_period** `<IntField>`
@@ -65,123 +67,123 @@ Endpoint que faz a gestão básicas de dados dos planetas que aparecem nos filme
 - **surface_water** `<IntField>`
 - **population** `<StringField>`
 
-### Campos read-only:
-- **id** `<objectId>`: Garante especificação do documento e concede a relação externa de n-para-n de para com os **Movies** 
-- **movies** `<array>`: Exibe a relação entre os planetas e os filmes apenas como leitura, a escrita deve ser feito pelo endpoint **Movies** previnindo erros de ma gestão de dados;
-- **movies_details** `<object>`: Exibe uma versão mais detalhada da relação com os recursos de **Movies**, para ser exibida necessita do parametro: **?movies_details=true**
-- **created_at** `<datetime>`: Gestão de criação dos documentos;
-- **updated_at** `<datetime>`: Gestão de ediação dos documentos;
+### Read-only fields:
+- **id** `<objectId>`: Ensures document specification and grants n-to-n external relationship to **Movies**
+- **movies** `<array>`: Displays the relation between the planets and the movies as read only, writing must be done by the **Movies** endpoint preventing errors in data management;
+- **movies_details** `<object>`: Displays a more detailed version of the relationship with **Movies** resources, to be displayed it needs the parameter: **?movies_details=true**
+- **created_at** `<datetime>`: Document creation management;
+- **updated_at** `<datetime>`: Document editing management;
 
-Exemplos de uso:
+Usage examples:
 
-#### Criando um planeta
+#### Creating a planet
 ![.docs/assets/swagger-create-planets.png](.docs/assets/swagger-create-planets.png)
 
-#### Listando os planetas criados
+#### Listing created planets
 ![.docs/assets/swagger-planets-listing.png](.docs/assets/swagger-planets-listing.png)
 
-#### Listagem detalhada dos filmes relacionados
+#### Detailed listing of related movies
 ![.docs/assets/swagger-planets-listing-detailed.png](.docs/assets/swagger-planets-listing-detailed.png)
 
-#### Atualização parcial de campos especificos dos planetas
+#### Partial update of planet specific fields
 ![.docs/assets/swagger-partial-update-plantets.png](.docs/assets/swagger-partial-update-plantets.png)
 
-#### Atualização dos campos de um planeta
+#### Updating a planet's fields
 ![.docs/assets/swagger-update-plantets.png](.docs/assets/swagger-update-plantets.png)
 
 ## Movies
 
-Endpoint que faz a gestão básicas de dados dos `movies` com as suas respectivas aparições em cada filme. 
+Endpoint that manages the basic data of `movies` with their respective appearances in each movie.
 
-### Métodos aplicados:
- **Método** | **Endpoint**                                  | **Descrição**                   
-------------|-----------------------------------------------|---------------------------------
- **GET**    | /api/starwars/movie/                          | List all movies resources       
- **GET**    | /api/starwars/movie/**?planets_details=true** | List all movies resources       
- **POST**   | /api/starwars/movie/                          | Create a movie resource         
- **PUT**    | /api/starwars/movie/{movie_id}/               | Update a movie resource         
- **PATCH**  | /api/starwars/movie/{movie_id}/               | Partial update a movie resource 
- **GET**    | /api/starwars/movie/{movie_id}/               | Retrieve a movie resource       
- **DELETE** | /api/starwars/movie/{movie_id}/               | Delete a movie resource         
+### Applied methods:
+  **Method** | **Endpoint** | **Description**
+------------|------------------------------------- ----------|---------------------------------
+  **GET** | /api/starwars/movie/ | List all movies resources
+  **GET** | /api/starwars/movie/**?planets_details=true** | List all movies resources
+  **POST** | /api/starwars/movie/ | Create a movie resource
+  **PUT** | /api/starwars/movie/{movie_id}/ | Update a movie resource
+  **PATCH** | /api/starwars/movie/{movie_id}/ | Partial update a movie resource
+  **GET** | /api/starwars/movie/{movie_id}/ | Retrieve a movie resource
+  **DELETE** | /api/starwars/movie/{movie_id}/ | Delete a movie resource
 
-### Campos alteraveis:
+### Changeable fields:
 - **title**: `<StringField>`
 - **opening_crawl**: `<StringField>`
 - **episode_id**: `<IntField>`
 - **director**: `<StringField>`
 - **producer**: `<StringField>`
 - **release_date**: `<DateField>`
-- **planets** `<array>`: Exibe a relação entre os planetas e os filmes, a escrita deve ser feito pelo endpoint **Movies** previnindo erros de ma gestão de dados;
+- **planets** `<array>`: Displays the relationship between the planets and the movies, the writing must be done by the **Movies** endpoint preventing errors in data management;
 
-### Campos read-only:
-- **id** `<objectId>`: Garante especificação do documento e concede a relação externa de n-para-n de para com os **Planets**
-- **planets_details** `<object>`: Exibe uma versão mais detalhada da relação com os recursos de **Planets**, para ser exibida necessita do parametro: **?planets_details=true**
-- **created_at** `<datetime>`: Gestão de criação dos documentos;
-- **updated_at** `<datetime>`: Gestão de ediação dos documentos;
+### Read-only fields:
+- **id** `<objectId>`: Ensures document specification and grants n-to-n external relationship to **Planets**
+- **planets_details** `<object>`: Displays a more detailed version of the relationship with **Planets** resources, to be displayed it needs the parameter: **?planets_details=true**
+- **created_at** `<datetime>`: Document creation management;
+- **updated_at** `<datetime>`: Document editing management;
 
 
-Exemplos de uso:
+Usage examples:
 
-#### Criando um Movie já o associando a 2 planetas 
+#### Creating a Movie already associating it with 2 planets
 ![.docs/assets/swagger-creating-movies.png](.docs/assets/swagger-creating-movies.png)
 
-#### Listagem detalhada dos Planetas relacionados
+#### Detailed listing of related Planets
 ![.docs/assets/swagger-movie-retrive-detailed.png](.docs/assets/swagger-movie-retrive-detailed.png)
 
-#### E por ai vai...
-Visite o swagger e descubra por conta própria
+#### And so on...
+Visit swagger and find out for yourself
 
 
 
-# Arquitetura e estrutura de pastas do projeto:
+# Architecture and folder structure of the project:
 
 ```
-├── docker-compose.yml: Arquivo de definição dos serviços
-├── Dockerfile: Arquivo de definição dos containers
-├── Makefile: Script com comandos operacionais repetivos
-├── manage.py: Script de execução do projetos
-├── pyproject.toml: Arquivo com configurações de Desenvoolvimento
-├── requirements-dev.txt: Dependencias dinamicas de desenvolvimento (gerados pelo Poetry)
-├── requirements.txt: Dependencias dinamicas de produção (gerados pelo Poetry)
-├── scripts: 
-│   └── git-hooks: Scripts e automações com o git
-├── settings.toml: **Arquivo com as configurações de produção da aplicação**
-├── starwars_api: **Pasta da aplicação**
-│   ├── extensions: Inicializadores do Flask que executam .init_app(app)
-│   ├── models: Define estruturas de dados 
-│   └── rest_apis: 
-│       └── starwars: 
-│           ├── endpoints: Views e controllers da api rest
-│           ├── queries: Queries de agregração com o mongodb
-│           ├── routes.py: Rotas de URL dos endpoints
-│           ├── serializers: Serializão a entrada de dados JSON -> MongoDB Document e vice e versa
-│           └── validators: Define validações de campos de entrada a API Rest e swagger devem ter
-└── tests: 
-    ├── datasets: Dados de casos de testes
-    └── fixtures: Fixtures de testes unitários
+├── docker-compose.yml: Services definition file
+├── Dockerfile: Container definition file
+├── Makefile: Script with repetitive operational commands
+├── manage.py: Project execution script
+├── pyproject.toml: File with Development settings
+├── requirements-dev.txt: Dynamic development dependencies (generated by Poetry)
+├── requirements.txt: Dynamic production dependencies (generated by Poetry)
+├── scripts:
+│ └── git-hooks: Scripts and automations with git
+├── settings.toml: **File with the application's production settings**
+├── starwars_api: **Application Folder**
+│ ├── extensions: Flask initializers that run .init_app(app)
+│ ├── models: Define data structures
+│ └── rest_apis:
+│ └── Star Wars:
+│ ├── endpoints: Views and controllers from the rest api
+│ ├── queries: Aggregation queries with mongodb
+│ ├── routes.py: URL routes from endpoints
+│ ├── serializers: JSON input serialization -> MongoDB Document and vice versa
+│ └── validators: Defines input field validations the Rest API and swagger must have
+└── tests:
+     ├── datasets: Test case data
+     └── fixtures: Unit Test Fixtures
 ```
 
-# Desenvolvimento
+# Development
 
-## Executando testes unitários de forma local
+## Running unit tests locally
 ```
 make test
 ```
 
-### Formatando arquivos python e importações
-```shell
+### Formatting python files and imports
+``` shell
 make fmt
 ```
 
-### Atualizado arquivos de requirements com poetry:
-1.) Adiciona novas dependencias no arquivo **pyproject.toml**
+### Updated requirements files with poetry:
+1.) Add new dependencies in the **pyproject.toml** file
 
-2.) Executa poetry atraves do comando make:
+2.) Run poetry through the make command:
 ```
 make build-requirements
 ```
 
-### Executando checagens de segurança
+### Running security checks
 ```
 make sec-check
 ```
