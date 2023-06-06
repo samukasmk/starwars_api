@@ -184,9 +184,18 @@ Visit swagger and find out for yourself
 
 
 ### Running unit tests locally
+
+> The execution of the unit tests depends on the `mongo_tests` container being running, don't forget to execute it first with the command **docker-compose up -d mongo_tests**
+
 ```
+docker-compose up -d mongo_tests
+
 make test
 ```
+
+**Example:**
+
+![.docs/assets/unit-tests.gif](.docs/assets/unit-tests.gif)
 
 ### Running unit tests through docker
 > Note: still need to adjust configuration error in the connection between the flask test container and the test mongo
