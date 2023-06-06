@@ -34,7 +34,7 @@ command: make test
 
 Após os passoes anteriores tiverem sido executados com sucesso e executando, connect na url de seu computador: [http://127.0.0.1:5000/](http://127.0.0.1:5000/).
 
-![.docs/assets/api-swagger-listing.png]()
+![.docs/assets/api-swagger-listing.png](.docs/assets/api-swagger-listing.png)
 
 Atualmente essa API implementa 2 endpoints:
 
@@ -44,15 +44,16 @@ Endpoint que faz a gestão básicas de dados dos planetas que aparecem nos filme
 
 ### Métodos aplicados:
 
-**Método** | **Extremidade** | **Descrição**
-------------|-------------------------------------- ------|------------------------------------------- ---------- --------------------------------------------- --------
- **POST**   | /api/starwars/planet/ | Criar um recurso do planeta
- **GET**    | /api/starwars/planet/ | Listar todos os recursos dos planetas
- **GET**    | /api/starwars/planet/?movies_details=true | Liste todos os recursos dos planetas (com informações relacionadas ao filme no campo **”movies_details"**)
- **GET**    | /api/starwars/planet/{planet_id}/ | Recupere um recurso do planeta
- **PUT**    | /api/starwars/planet/{planet_id}/ | Atualizar um recurso do planeta
- **PATCH**  | /api/starwars/planet/{planet_id}/ | Atualização parcial de um recurso planeta
- **DELETE** | /api/starwars/planet/{planet_id}/ | Excluir um do planeta
+ **Método** | **Endpoint**                              | **Descrição**                                                                                             
+------------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------
+ **GET**    | /api/starwars/planet/                     | Listar todos os recursos dos planetas                                                                     
+ **GET**    | /api/starwars/planet/?movies_details=true | Liste todos os recursos dos planetas, com informações relacionadas ao filme no campo **”movies_details"** 
+ **GET**    | /api/starwars/planet/{planet_id}/         | Recupere um recurso do planeta                                                                            
+ **GET**    | /api/starwars/planet/{planet_id}/         | Recupere um recurso do planeta, com informações relacionadas ao filme no campo **”planets_details"**      
+ **POST**   | /api/starwars/planet/                     | Criar um recurso do planeta                                                                               
+ **PUT**    | /api/starwars/planet/{planet_id}/         | Atualizar um recurso do planeta                                                                           
+ **PATCH**  | /api/starwars/planet/{planet_id}/         | Atualização parcial de um recurso do planeta                                                              
+ **DELETE** | /api/starwars/planet/{planet_id}/         | Excluir um recurso do planeta     
 
 ### Campos alteraveis:
 - **name** `<StringField>`
@@ -95,15 +96,15 @@ Endpoint que faz a gestão básicas de dados dos `movies` com as suas respectiva
 
 ### Métodos aplicados:
 
-**Método**  | **Endpoint**                                  | **Descrição**                                                                             
-------------|-----------------------------------------------|-------------------------------------------------------------------------------------------
- **GET**    | /api/starwars/movie/                          | Listar todos os recursos de filmes
- **GET**    | /api/starwars/movie/**?planets_details=true** | Listar todos os recursos de filmes
- **POST**   | /api/starwars/movie/                          | Criar um recurso de filme
- **PUT**    | /api/starwars/movie/{movie_id}/               | Atualizar um recurso de filme
- **PATCH**  | /api/starwars/movie/{movie_id}/               | Atualização parcial de um recurso de filme
- **GET**    | /api/starwars/movie/{movie_id}/               | Recuperar um recurso de filme
- **DELETE** | /api/starwars/movie/{movie_id}/               | Excluir um recurso de filme
+ **Método** | **Endpoint**                                  | **Descrição**                                                                                            
+------------|-----------------------------------------------|----------------------------------------------------------------------------------------------------------
+ **GET**    | /api/starwars/movie/                          | Listar todos os recursos de filmes                                                                       
+ **GET**    | /api/starwars/movie/**?planets_details=true** | Listar todos os recursos de filmes (com informações relacionadas ao filme no campo **”movies_details"**) 
+ **POST**   | /api/starwars/movie/                          | Criar um recurso de filme                                                                                
+ **PUT**    | /api/starwars/movie/{movie_id}/               | Atualizar um recurso de filme                                                                            
+ **PATCH**  | /api/starwars/movie/{movie_id}/               | Atualização parcial de um recurso de filme                                                               
+ **GET**    | /api/starwars/movie/{movie_id}/               | Recuperar um recurso de filme                                                                            
+ **DELETE** | /api/starwars/movie/{movie_id}/               | Excluir um recurso de filme      
 
 
 ### Campos alteraveis:
@@ -134,8 +135,6 @@ Exemplos de uso:
 
 #### E por ai vai...
 Visite o swagger e descubra por conta própria
-
-
 
 # Arquitetura e estrutura de pastas do projeto:
 
