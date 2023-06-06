@@ -25,6 +25,8 @@ GIT_CONFIG_DIR := $(shell git rev-parse --git-dir)
 install:
 	@pip install -r requirements.txt
 
+install-prod: install
+
 install-dev:
 	@pip install -r requirements-dev.txt
 
@@ -79,6 +81,7 @@ poetry-export:
 
 build-requirements-local: pip-install-poetry \
                           recreate-poetry-env \
+                          clean-poetry-lock-file \
                           poetry-install \
                           poetry-export
 
@@ -121,11 +124,10 @@ fmt:
 
 
 ### actions to run unit tests
-test: clean
+test: fmt clean
 	@pytest --cov=app --cov-report term:skip-covered --cov-report html:htmlcov --junit-xml=coverage.xml
 	@make clean-cache-files
 	@make fix-coverage-permissions
-
 
 ### actions to run security checkers
 sec-check:
@@ -136,7 +138,7 @@ sec-check:
 
 ## actions to run flask app
 runserver:
-	@gunicorn -b 0.0.0.0:5000 -w 4 'starwars_api.base:create_app_wsgi'
+	@gunicorn --bind 0.0.0.0:5000 -w 4 'starwars_api.base:create_app'
 
 devserver:
 	@python manage.py run

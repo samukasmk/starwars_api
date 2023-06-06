@@ -6,11 +6,9 @@ def load_settings_file(app: Flask, **extra_config) -> None:
     """
     Load Dynaconf settings (from settings.toml) merging with env variables (FLASK_*)
     """
-    FlaskDynaconf(app, envvar_prefix="FLASK")
+    FlaskDynaconf(app, envvar_prefix="FLASK", **extra_config)
     # Initialize project extensions defined in settings.toml
-    app.config.load_extensions("EXTENSIONS")  # type: ignore[attr-defined]
-    # Overwrite Dynaconf settings from extra config on app creation
-    app.config.update(extra_config)
+    app.config.load_extensions("EXTENSIONS")  # NOQA[attr-defined]
 
 
 def create_app(**extra_config) -> Flask:
@@ -19,13 +17,4 @@ def create_app(**extra_config) -> Flask:
     """
     app = Flask(__name__)
     load_settings_file(app, **extra_config)
-    return app
-
-
-def create_app_wsgi() -> Flask:
-    """
-    Workaround for Flask issue that doesn't allow **config to be passed to create_app
-    https://github.com/pallets/flask/issues/4170
-    """
-    app = create_app()
     return app
