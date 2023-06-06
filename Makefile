@@ -50,7 +50,7 @@ deactivate-commit-checks:
 	@echo "Uninstalling hook: pre-commit ..."
 	@find .git/hooks/pre-commit -type l -delete 2> /dev/null || true
 
-activate-all-git-hooks: activate-commit-msg-fmt activate-commit-checks
+activate-git-hooks: activate-commit-msg-fmt activate-commit-checks
 
 deactivate-git-hooks:
 	@find .git/hooks -type l -delete 2> /dev/null
