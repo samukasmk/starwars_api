@@ -8,6 +8,8 @@ services:
       context: .
       args:
         INSTALL_LIBS: prod
+    environment:
+        FLASK_MONGODB_HOST: "mongodb://starwars:starwars@mongo:27017/starwars"
     ports:
       - 5000:5000
     networks:
