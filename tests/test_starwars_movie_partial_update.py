@@ -16,10 +16,11 @@ def test_starwars_movie_update(client, mock_planet_models, planets_objects_ids, 
 
     for idx, movie_model in enumerate(mock_movie_models):
         request_payload = requested_movies_data[idx]
-        request_payload['episode_id'] = 10000000
+        request_payload["episode_id"] = 10000000
         # check http response
-        response = client.patch(f"/api/starwars/movie/{movie_model['id']}/",
-                                json={'episode_id': request_payload['episode_id']})
+        response = client.patch(
+            f"/api/starwars/movie/{movie_model['id']}/", json={"episode_id": request_payload["episode_id"]}
+        )
         assert response.status_code == 200
         # check results
         response_json = copy.deepcopy(response.json)

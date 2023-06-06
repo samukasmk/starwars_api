@@ -16,10 +16,11 @@ def test_starwars_planet_partial_update(client, mock_movie_models, movies_object
 
     for idx, planet_model in enumerate(mock_planet_models):
         request_payload = requested_planets_data[idx]
-        request_payload['diameter'] = 10000000
+        request_payload["diameter"] = 10000000
         # check http response
-        response = client.patch(f"/api/starwars/planet/{planet_model['id']}/",
-                                json={'diameter': request_payload['diameter']})
+        response = client.patch(
+            f"/api/starwars/planet/{planet_model['id']}/", json={"diameter": request_payload["diameter"]}
+        )
         assert response.status_code == 200
         # check results
         response_json = copy.deepcopy(response.json)

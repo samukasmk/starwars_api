@@ -16,7 +16,7 @@ def test_starwars_movie_update(client, mock_planet_models, planets_objects_ids, 
 
     for idx, movie_model in enumerate(mock_movie_models):
         request_payload = requested_movies_data[idx]
-        request_payload['episode_id'] = 10000000
+        request_payload["episode_id"] = 10000000
         # check http response
         response = client.put(f"/api/starwars/movie/{movie_model['id']}/", json=request_payload)
         assert response.status_code == 200

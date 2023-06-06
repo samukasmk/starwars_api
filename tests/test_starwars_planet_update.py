@@ -16,7 +16,7 @@ def test_starwars_planet_update(client, mock_movie_models, movies_objects_ids, m
 
     for idx, planet_model in enumerate(mock_planet_models):
         request_payload = requested_planets_data[idx]
-        request_payload['diameter'] = 10000000
+        request_payload["diameter"] = 10000000
         # check http response
         response = client.put(f"/api/starwars/planet/{planet_model['id']}/", json=request_payload)
         assert response.status_code == 200
