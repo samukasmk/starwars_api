@@ -106,3 +106,6 @@ skip_gitignore = true
 [tool.black]
 line_length = 120
 extend-exclude = "(scripts/* | .git/* | .poetry-venv/* | */__pycache__/* | */.pytest_cache/* | */.tox/* | */.env/*)"
+
+[tool.coverage.run]
+omit = ["test_*"]
