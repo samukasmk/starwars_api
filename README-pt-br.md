@@ -21,9 +21,6 @@ git clone https://github.com/samukasmk/starwars_api.git
 cd starwars_api
 
 docker-compose up --build
-
-http://127.0.0.1:5000
-command: make test
 ```
 
 ## Exemplo de execução da aplicação com o docker-compose
@@ -46,14 +43,13 @@ Endpoint que faz a gestão básicas de dados dos planetas que aparecem nos filme
 
  **Método** | **Endpoint**                              | **Descrição**                                                                                             
 ------------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------
+ **POST**   | /api/starwars/planet/                     | Criar um recurso do planeta 
  **GET**    | /api/starwars/planet/                     | Listar todos os recursos dos planetas                                                                     
  **GET**    | /api/starwars/planet/?movies_details=true | Liste todos os recursos dos planetas, com informações relacionadas ao filme no campo **”movies_details"** 
- **GET**    | /api/starwars/planet/{planet_id}/         | Recupere um recurso do planeta                                                                            
- **GET**    | /api/starwars/planet/{planet_id}/         | Recupere um recurso do planeta, com informações relacionadas ao filme no campo **”planets_details"**      
- **POST**   | /api/starwars/planet/                     | Criar um recurso do planeta                                                                               
- **PUT**    | /api/starwars/planet/{planet_id}/         | Atualizar um recurso do planeta                                                                           
- **PATCH**  | /api/starwars/planet/{planet_id}/         | Atualização parcial de um recurso do planeta                                                              
- **DELETE** | /api/starwars/planet/{planet_id}/         | Excluir um recurso do planeta     
+ **GET**    | /api/starwars/planet/<planet_id>/         | Recupere um recurso do planeta                                                                              
+ **PUT**    | /api/starwars/planet/<planet_id>/         | Atualizar um recurso do planeta                                                                           
+ **PATCH**  | /api/starwars/planet/<planet_id>/         | Atualização parcial de um recurso do planeta                                                              
+ **DELETE** | /api/starwars/planet/<planet_id>/         | Excluir um recurso do planeta     
 
 ### Campos alteraveis:
 - **name** `<StringField>`
@@ -98,13 +94,13 @@ Endpoint que faz a gestão básicas de dados dos `movies` com as suas respectiva
 
  **Método** | **Endpoint**                                  | **Descrição**                                                                                            
 ------------|-----------------------------------------------|----------------------------------------------------------------------------------------------------------
+ **POST**   | /api/starwars/movie/                          | Criar um recurso de filme                                                                                
  **GET**    | /api/starwars/movie/                          | Listar todos os recursos de filmes                                                                       
  **GET**    | /api/starwars/movie/**?planets_details=true** | Listar todos os recursos de filmes (com informações relacionadas ao filme no campo **”movies_details"**) 
- **POST**   | /api/starwars/movie/                          | Criar um recurso de filme                                                                                
- **PUT**    | /api/starwars/movie/{movie_id}/               | Atualizar um recurso de filme                                                                            
- **PATCH**  | /api/starwars/movie/{movie_id}/               | Atualização parcial de um recurso de filme                                                               
- **GET**    | /api/starwars/movie/{movie_id}/               | Recuperar um recurso de filme                                                                            
- **DELETE** | /api/starwars/movie/{movie_id}/               | Excluir um recurso de filme      
+ **GET**    | /api/starwars/movie/<movie_id>/               | Recuperar um recurso de filme                                                                            
+ **PUT**    | /api/starwars/movie/<movie_id>/               | Atualizar um recurso de filme                                                                            
+ **PATCH**  | /api/starwars/movie/<movie_id>/               | Atualização parcial de um recurso de filme                                                               
+ **DELETE** | /api/starwars/movie/<movie_id>/               | Excluir um recurso de filme      
 
 
 ### Campos alteraveis:
@@ -166,9 +162,36 @@ Visite o swagger e descubra por conta própria
 
 # Desenvolvimento
 
-## Executando testes unitários de forma local
+## Qualidade de código
+
+### Tipos de testes executados no projeto
+
+| **Testes**                                        | **Descrição**                                                                   |
+|---------------------------------------------------|---------------------------------------------------------------------------------|
+| **[pytest](https://docs.pytest.org/)**            | Testes unitários da API Rest                                                    |
+| **[mypy](https://mypy.readthedocs.io/)**          | Testes de tipagem e anotações de entrada e saida de funções, métodos, variaveis |
+| **[pyflakes](https://github.com/PyCQA/pyflakes)** | Testes de sintaxe funcional que encherga além de uma importação                 |
+| **[pylint](https://pylint.readthedocs.io/)**      | Testes de sintaxe avançados com analises mais complexas                         |
+| **[pycodestyle](https://pycodestyle.pycqa.org/)** | Testes de compatibilidade com as boas praticas pep8                             |
+| **[radon](https://radon.readthedocs.io/)**        | Testes de complexidade cicliomatica                                             |
+| **[pylama](https://klen.github.io/pylama/)**      | Agregrador dos testes acima, de forma unificada                                 |
+| **[isort](https://pycqa.github.io/isort/)**       | Testes de ordenação de importação                                               |
+| **[bandit](https://bandit.readthedocs.io/)**      | Testes de descoberta de vunerabilidades de seguração escritas no codigo fonte   |
+
+> Caso deseje desativar algum teste altere as configurações no arquivo **pyproject.toml**
+
+
+### Executando testes unitários de forma local
 ```
 make test
+```
+
+### Executando testes unitários pelo docker
+> Observação: ainda falta ajustar erro de configuração na conexão entre o container de testes do flask e o mongo de testes
+
+```
+docker-compose up -d mongo_tests
+docker-compose run --rm unit-tests
 ```
 
 ### Formatando arquivos python e importações
@@ -176,15 +199,101 @@ make test
 make fmt
 ```
 
-### Atualizado arquivos de requirements com poetry:
-1.) Adiciona novas dependencias no arquivo **pyproject.toml**
-
-2.) Executa poetry atraves do comando make:
-```
-make build-requirements
-```
-
 ### Executando checagens de segurança
 ```
 make sec-check
 ```
+
+
+
+
+## Agilidade no desenvolvimento
+
+### Executando o flask na sua maquina local
+
+
+#### Em modo de produção
+```
+docker-compose up -d mongo 
+make runserver
+```
+
+#### Modos de desenvolvimentos alternativos
+```
+make devserver
+
+make debugserver
+```
+
+### Automatizando comandos com o Git Hooks
+
+#### Executando os testes unitários após cada commit
+```
+make activate-commit-checks
+```
+
+![.docs/assets/git-commit-hooks.png](.docs/assets/git-commit-hooks.png)
+
+
+#### Formatando as mensagens de commits com o nome do branch
+```
+make activate-commit-msg-fmt
+```
+
+![.docs/assets/git-commit-fmt.png](.docs/assets/git-commit-fmt.png)
+
+
+#### Desativando as automações instaladas de githooks
+```
+make deactivate-git-hooks
+```
+
+
+## DevOps
+
+### Adicionar nova biblioteca python
+
+A gestão de dependencias é feita atraves da ferramenta [python-poetry](https://python-poetry.org/) que escolhe as subversões, a fim de encontrar um meio termo para que todas as bibliotecas necessárias possam coexistir e ao mesmo tempo ter uma constante evolução, evitando vunerabilidades de segurança.
+
+Para adicionar uma nova biblioteca requerida, o indicado é:
+
+1.) Localiza-la no repositório [https://pypi.org/](https://pypi.org/)
+
+2.) Obter a versão atual
+
+3.) Declara-la no arquivo de dependencias **pyproject.toml** como uma versão atual ou superior.
+
+Exemplo se for a versão 1.0.0 da biblioteca xpto, declara-la como:
+```
+xpto = "^1.0.0"
+```
+
+4.) Reconstruir os arquivos de requiments.txt
+
+```
+make build-requirements
+```
+
+O comando acima executa as seguintes operações:
+- Cria um virtualenv separado (apenas para a gestão do poetry)
+- Executa o poetry install
+- Exporta os arquivos de requirements.txt
+
+> Caso você queira que essa reconstrução seja feita no seu virtualenv local basta rodar o comando: **make build-requirements-local**
+
+5.) Reconstrua seu virtualenv local
+
+Para instalar os novos arquivos de requirements você pode executar:
+
+**Em modo de produção:**
+```
+make install
+```
+
+ou 
+
+**Em modo de desenvolvimento:**
+```
+make install-dev
+```
+
